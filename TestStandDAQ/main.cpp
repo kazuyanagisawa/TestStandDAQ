@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -24,6 +25,8 @@ int main() {
     cout << "Starting Test Stand Data Acquisition Simulation..." << endl;
     cout << "System initialized successfully." << endl;
     cout << endl;
+
+    vector<SensorReading> readings;
 
     for (int timeStep = 0; timeStep < 5; timeStep++) {
         double temperatureCelsius = 650.0 + (timeStep * 25.0);
@@ -73,6 +76,10 @@ int main() {
         vibrationReading.unit = "g";
         vibrationReading.status = vibrationStatus;
 
+        readings.push_back(temperatureReading);
+        readings.push_back(pressureReading);
+        readings.push_back(vibrationReading);
+
         cout << "Time: " << timeStep << " seconds" << endl;
         printReading(temperatureReading);
         printReading(pressureReading);
@@ -81,6 +88,7 @@ int main() {
     }
 
     cout << "Test complete." << endl;
+    cout << "Total readings collected: " << readings.size() << endl;
 
     return 0;
 }
