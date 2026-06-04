@@ -7,20 +7,19 @@ int main() {
     cout << "System initialized successfully." << endl;
     cout << endl;
 
-    double timeSeconds = 0.0;
-    double temperatureCelsius = 650.0;
-    double pressurePsi = 210.0;
-    double vibrationG = 1.2;
+    for (int timeStep = 0; timeStep < 5; timeStep++) {
+        double temperatureCelsius = 650.0 + (timeStep * 25.0);
+        double pressurePsi = 210.0 + (timeStep * 8.0);
+        double vibrationG = 1.2 + (timeStep * 0.3);
 
-    string temperatureStatus = "OK";
+        string temperatureStatus = "OK";
 
-    if (temperatureCelsius >= 800.0) {
-        temperatureStatus = "CRITICAL";
-    } else if (temperatureCelsius >= 700.0) {
-        temperatureStatus = "WARNING";
-    }
+        if (temperatureCelsius >= 800.0) {
+            temperatureStatus = "CRITICAL";
+        } else if (temperatureCelsius >= 700.0) {
+            temperatureStatus = "WARNING";
+        }
 
-    for (int timeStep = 0; timeStep < 5; timeStep++){
         cout << "Time: " << timeStep << " seconds" << endl;
         cout << "Temperature: " << temperatureCelsius << " C | Status: " << temperatureStatus << endl;
         cout << "Pressure: " << pressurePsi << " psi" << endl;
