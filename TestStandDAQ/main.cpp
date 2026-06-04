@@ -1,8 +1,15 @@
-
 #include <iostream>
 #include <string>
 
 using namespace std;
+
+struct SensorReading
+{
+    string sensorName;
+    double value;
+    string unit;
+    string status;
+};
 
 int main() {
     cout << "Starting Test Stand Data Acquisition Simulation..." << endl;
@@ -36,8 +43,18 @@ int main() {
             vibrationStatus = "WARNING";
         }
 
+        SensorReading temperatureReading;
+        
+        temperatureReading.sensorName = "Temperature";
+        temperatureReading.value = temperatureCelsius;
+        temperatureReading.unit = "C";
+        temperatureReading.status = temperatureStatus;
+        
         cout << "Time: " << timeStep << " seconds" << endl;
-        cout << "Temperature: " << temperatureCelsius << " C | Status: " << temperatureStatus << endl;
+        cout << temperatureReading.sensorName << ": "
+             << temperatureReading.value << " "
+             << temperatureReading.unit
+             << " | Status: " << temperatureReading.status << endl;
         cout << "Pressure: " << pressurePsi << " psi | Status: " << pressureStatus << endl;
         cout << "Vibration: " << vibrationG << " g | Status: " << vibrationStatus << endl;
         cout << endl;
