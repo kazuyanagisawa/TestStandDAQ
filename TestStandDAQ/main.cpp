@@ -5,6 +5,7 @@ using namespace std;
 
 struct SensorReading
 {
+    int timeSeconds;
     string sensorName;
     double value;
     string unit;
@@ -44,19 +45,39 @@ int main() {
         }
 
         SensorReading temperatureReading;
-        
+        temperatureReading.timeSeconds = timeStep;
         temperatureReading.sensorName = "Temperature";
         temperatureReading.value = temperatureCelsius;
         temperatureReading.unit = "C";
         temperatureReading.status = temperatureStatus;
-        
+
+        SensorReading pressureReading;
+        pressureReading.timeSeconds = timeStep;
+        pressureReading.sensorName = "Pressure";
+        pressureReading.value = pressurePsi;
+        pressureReading.unit = "psi";
+        pressureReading.status = pressureStatus;
+
+        SensorReading vibrationReading;
+        vibrationReading.timeSeconds = timeStep;
+        vibrationReading.sensorName = "Vibration";
+        vibrationReading.value = vibrationG;
+        vibrationReading.unit = "g";
+        vibrationReading.status = vibrationStatus;
+
         cout << "Time: " << timeStep << " seconds" << endl;
         cout << temperatureReading.sensorName << ": "
              << temperatureReading.value << " "
              << temperatureReading.unit
              << " | Status: " << temperatureReading.status << endl;
-        cout << "Pressure: " << pressurePsi << " psi | Status: " << pressureStatus << endl;
-        cout << "Vibration: " << vibrationG << " g | Status: " << vibrationStatus << endl;
+        cout << pressureReading.sensorName << ": "
+             << pressureReading.value << " "
+             << pressureReading.unit
+             << " | Status: " << pressureReading.status << endl;
+        cout << vibrationReading.sensorName << ": "
+             << vibrationReading.value << " "
+             << vibrationReading.unit
+             << " | Status: " << vibrationReading.status << endl;
         cout << endl;
     }
 
