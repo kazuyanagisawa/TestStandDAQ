@@ -12,6 +12,14 @@ struct SensorReading
     string status;
 };
 
+void printReading(const SensorReading& reading)
+{
+    cout << reading.sensorName << ": "
+         << reading.value << " "
+         << reading.unit
+         << " | Status: " << reading.status << endl;
+}
+
 int main() {
     cout << "Starting Test Stand Data Acquisition Simulation..." << endl;
     cout << "System initialized successfully." << endl;
@@ -66,18 +74,9 @@ int main() {
         vibrationReading.status = vibrationStatus;
 
         cout << "Time: " << timeStep << " seconds" << endl;
-        cout << temperatureReading.sensorName << ": "
-             << temperatureReading.value << " "
-             << temperatureReading.unit
-             << " | Status: " << temperatureReading.status << endl;
-        cout << pressureReading.sensorName << ": "
-             << pressureReading.value << " "
-             << pressureReading.unit
-             << " | Status: " << pressureReading.status << endl;
-        cout << vibrationReading.sensorName << ": "
-             << vibrationReading.value << " "
-             << vibrationReading.unit
-             << " | Status: " << vibrationReading.status << endl;
+        printReading(temperatureReading);
+        printReading(pressureReading);
+        printReading(vibrationReading);
         cout << endl;
     }
 
