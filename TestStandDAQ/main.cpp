@@ -20,11 +20,13 @@ int main() {
         temperatureStatus = "WARNING";
     }
 
-    cout << "Time: " << timeSeconds << " seconds" << endl;
-    cout << "Temperature: " << temperatureCelsius << " C | Status: " << temperatureStatus << endl;
-    cout << "Pressure: " << pressurePsi << " psi" << endl;
-    cout << "Vibration: " << vibrationG << " g" << endl;
-    cout << endl;
+    for (int timeStep = 0; timeStep < 5; timeStep++){
+        cout << "Time: " << timeStep << " seconds" << endl;
+        cout << "Temperature: " << temperatureCelsius << " C | Status: " << temperatureStatus << endl;
+        cout << "Pressure: " << pressurePsi << " psi" << endl;
+        cout << "Vibration: " << vibrationG << " g" << endl;
+        cout << endl;
+    }
 
     cout << "Test complete." << endl;
 
