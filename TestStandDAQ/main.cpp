@@ -384,6 +384,16 @@ private:
         return true;
     }
 
+    bool validateTestHasRun(const string& operationName) const
+    {
+        if (!hasRun) {
+            cout << "Error: Cannot " << operationName << " before test run." << endl;
+            return false;
+        }
+
+        return true;
+    }
+
     void runAcquisitionLoop()
     {
         for (int timeStep = 0; timeStep < durationSeconds; timeStep++) {
@@ -431,8 +441,7 @@ public:
 
     void printSummary() const
     {
-        if (!hasRun) {
-            cout << "Error: Cannot print summary before test run." << endl;
+        if (!validateTestHasRun("print summary")) {
             return;
         }
 
@@ -442,8 +451,7 @@ public:
 
     void writeSummaryCsv(const string& fileName) const
     {
-        if (!hasRun) {
-            cout << "Error: Cannot write summary CSV before test run." << endl;
+        if (!validateTestHasRun("write summary CSV")) {
             return;
         }
 
@@ -453,8 +461,7 @@ public:
 
     void printSensorStatisticsReport() const
     {
-        if (!hasRun) {
-            cout << "Error: Cannot print sensor statistics before test run." << endl;
+        if (!validateTestHasRun("print sensor statistics")) {
             return;
         }
 
@@ -469,8 +476,7 @@ public:
 
     void writeSensorStatisticsCsv(const string& fileName) const
     {
-        if (!hasRun) {
-            cout << "Error: Cannot write sensor statistics CSV before test run." << endl;
+        if (!validateTestHasRun("write sensor statistics CSV")) {
             return;
         }
 
@@ -486,8 +492,7 @@ public:
 
     void writeCsvLog(const string& fileName) const
     {
-        if (!hasRun) {
-            cout << "Error: Cannot write data log before test run." << endl;
+        if (!validateTestHasRun("write data log")) {
             return;
         }
 
