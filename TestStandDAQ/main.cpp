@@ -141,6 +141,21 @@ private:
     vector<SensorReading> readings;
     int durationSeconds;
 
+    bool validateConfiguration() const
+    {
+        if (durationSeconds <= 0) {
+            cout << "Error: Test duration must be greater than zero seconds." << endl;
+            return false;
+        }
+
+        if (sensors.empty()) {
+            cout << "Error: Cannot run test stand with zero configured sensors." << endl;
+            return false;
+        }
+
+        return true;
+    }
+
     void runAcquisitionLoop()
     {
         for (int timeStep = 0; timeStep < durationSeconds; timeStep++) {
@@ -168,14 +183,19 @@ public:
         sensors.push_back(sensor);
     }
 
-    void run()
+    bool run()
     {
+        if (!validateConfiguration()) {
+            return false;
+        }
+
         cout << "Configured sensors: "
              << sensors.size()
              << endl
              << endl;
 
         runAcquisitionLoop();
+        return true;
     }
 
     void printSummary() const
@@ -200,7 +220,9 @@ int main() {
     testStand.addSensor(Sensor("Pressure", "psi", 235.0, 250.0, 210.0, 8.0));
     testStand.addSensor(Sensor("Vibration", "g", 1.8, 2.2, 1.2, 0.3));
 
-    testStand.run();
+    if (!testStand.run()) {
+        return 1;
+    }
 
     cout << "Test complete." << endl;
     cout << endl;
