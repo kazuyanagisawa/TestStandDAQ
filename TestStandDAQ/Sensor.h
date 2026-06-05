@@ -47,6 +47,7 @@ public:
     static const int NO_FAILURE = -1;
     static const int NO_SPIKE = -1;
     static const int NO_DROPOUT = -1;
+    Sensor(const SensorConfig& config);
 
     Sensor(
         std::string sensorName,
