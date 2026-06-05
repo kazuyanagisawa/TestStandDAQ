@@ -104,6 +104,17 @@ public:
         warningThreshold = warningLimit;
         criticalThreshold = criticalLimit;
     }
+
+    string determineStatus(double value) const
+    {
+        if (value >= criticalThreshold) {
+            return "CRITICAL";
+        } else if (value >= warningThreshold) {
+            return "WARNING";
+        }
+
+        return "OK";
+    }
 };
 
 int main() {
@@ -122,21 +133,9 @@ int main() {
         double pressurePsi = 210.0 + (timeStep * 8.0);
         double vibrationG = 1.2 + (timeStep * 0.3);
 
-        string temperatureStatus = determineStatus(
-            temperatureCelsius,
-            temperatureSensor.warningThreshold,
-            temperatureSensor.criticalThreshold
-        );
-        string pressureStatus = determineStatus(
-            pressurePsi,
-            pressureSensor.warningThreshold,
-            pressureSensor.criticalThreshold
-        );
-        string vibrationStatus = determineStatus(
-            vibrationG,
-            vibrationSensor.warningThreshold,
-            vibrationSensor.criticalThreshold
-        );
+        string temperatureStatus = temperatureSensor.determineStatus(temperatureCelsius);
+        string pressureStatus = pressureSensor.determineStatus(pressurePsi);
+        string vibrationStatus = vibrationSensor.determineStatus(vibrationG);
 
         SensorReading temperatureReading;
         temperatureReading.timeSeconds = timeStep;
