@@ -104,6 +104,18 @@ public:
 
         return "OK";
     }
+
+    SensorReading createReading(double value, int timeSeconds) const
+    {
+        SensorReading reading;
+        reading.timeSeconds = timeSeconds;
+        reading.sensorName = name;
+        reading.value = value;
+        reading.unit = unit;
+        reading.status = determineStatus(value);
+
+        return reading;
+    }
 };
 
 int main() {
@@ -122,30 +134,9 @@ int main() {
         double pressurePsi = 210.0 + (timeStep * 8.0);
         double vibrationG = 1.2 + (timeStep * 0.3);
 
-        string temperatureStatus = temperatureSensor.determineStatus(temperatureCelsius);
-        string pressureStatus = pressureSensor.determineStatus(pressurePsi);
-        string vibrationStatus = vibrationSensor.determineStatus(vibrationG);
-
-        SensorReading temperatureReading;
-        temperatureReading.timeSeconds = timeStep;
-        temperatureReading.sensorName = temperatureSensor.name;
-        temperatureReading.value = temperatureCelsius;
-        temperatureReading.unit = temperatureSensor.unit;
-        temperatureReading.status = temperatureStatus;
-
-        SensorReading pressureReading;
-        pressureReading.timeSeconds = timeStep;
-        pressureReading.sensorName = pressureSensor.name;
-        pressureReading.value = pressurePsi;
-        pressureReading.unit = pressureSensor.unit;
-        pressureReading.status = pressureStatus;
-
-        SensorReading vibrationReading;
-        vibrationReading.timeSeconds = timeStep;
-        vibrationReading.sensorName = vibrationSensor.name;
-        vibrationReading.value = vibrationG;
-        vibrationReading.unit = vibrationSensor.unit;
-        vibrationReading.status = vibrationStatus;
+        SensorReading temperatureReading = temperatureSensor.createReading(temperatureCelsius, timeStep);
+        SensorReading pressureReading = pressureSensor.createReading(pressurePsi, timeStep);
+        SensorReading vibrationReading = vibrationSensor.createReading(vibrationG, timeStep);
 
         readings.push_back(temperatureReading);
         readings.push_back(pressureReading);
