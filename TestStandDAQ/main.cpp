@@ -249,8 +249,8 @@ private:
         for (int timeStep = 0; timeStep < durationSeconds; timeStep++) {
             cout << "Time: " << timeStep << " seconds" << endl;
 
-            for (size_t sensorIndex = 0; sensorIndex < sensors.size(); sensorIndex++) {
-                SensorReading reading = sensors[sensorIndex].createReading(timeStep);
+            for (const Sensor& sensor : sensors) {
+                SensorReading reading = sensor.createReading(timeStep);
                 readings.push_back(reading);
                 printReading(reading);
             }
