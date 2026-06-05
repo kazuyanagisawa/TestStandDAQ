@@ -5,13 +5,20 @@
 
 using namespace std;
 
+enum class Status
+{
+    OK,
+    WARNING,
+    CRITICAL
+};
+
 struct SensorReading
 {
     int timeSeconds;
     string sensorName;
     double value;
     string unit;
-    string status;
+    Status status;
 };
 
 void printReading(const SensorReading& reading)
