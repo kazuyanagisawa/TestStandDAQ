@@ -14,13 +14,16 @@ enum class Status
 
 string statusToString(Status status)
 {
-    if (status == Status::CRITICAL) {
-        return "CRITICAL";
-    } else if (status == Status::WARNING) {
-        return "WARNING";
+    switch (status) {
+        case Status::OK:
+            return "OK";
+        case Status::WARNING:
+            return "WARNING";
+        case Status::CRITICAL:
+            return "CRITICAL";
     }
 
-    return "OK";
+    return "UNKNOWN";
 }
 
 struct SensorReading
