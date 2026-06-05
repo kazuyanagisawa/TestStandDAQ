@@ -4,6 +4,27 @@
 #include <string>
 #include "SensorReading.h"
 
+struct SensorConfig
+{
+    std::string name;
+    std::string unit;
+
+    double warningThreshold;
+    double criticalThreshold;
+
+    double baseValue;
+    double rateOfChange;
+    double noiseAmplitude;
+
+    int failureTimeSeconds = -1;
+
+    int spikeTimeSeconds = -1;
+    double spikeMagnitude = 0.0;
+
+    int dropoutStartTimeSeconds = -1;
+    int dropoutDurationSeconds = 0;
+};
+
 class Sensor
 {
 private:
