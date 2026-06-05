@@ -117,13 +117,13 @@ public:
         double criticalLimit,
         double startingValue,
         double changeRate)
+        : name(sensorName),
+          unit(sensorUnit),
+          warningThreshold(warningLimit),
+          criticalThreshold(criticalLimit),
+          baseValue(startingValue),
+          rateOfChange(changeRate)
     {
-        name = sensorName;
-        unit = sensorUnit;
-        warningThreshold = warningLimit;
-        criticalThreshold = criticalLimit;
-        baseValue = startingValue;
-        rateOfChange = changeRate;
     }
 
     double simulateValue(int timeSeconds) const
@@ -195,8 +195,8 @@ private:
 
 public:
     TestStand(int testDurationSeconds)
+        : durationSeconds(testDurationSeconds)
     {
-        durationSeconds = testDurationSeconds;
     }
 
     void addSensor(const Sensor& sensor)
