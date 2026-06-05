@@ -3,6 +3,7 @@
 #include <limits>
 #include <string>
 #include <vector>
+#include "Status.h"
 
 using namespace std;
 
@@ -11,30 +12,6 @@ const string DATA_LOG_FILE_NAME = "test_log.csv";
 const string SENSOR_STATISTICS_FILE_NAME = "sensor_statistics.csv";
 const string TEST_SUMMARY_FILE_NAME = "test_summary.csv";
 
-// Status definitions
-enum class Status
-{
-    OK,
-    WARNING,
-    CRITICAL,
-    SENSOR_FAILURE
-};
-
-string statusToString(Status status)
-{
-    switch (status) {
-        case Status::OK:
-            return "OK";
-        case Status::WARNING:
-            return "WARNING";
-        case Status::CRITICAL:
-            return "CRITICAL";
-        case Status::SENSOR_FAILURE:
-            return "SENSOR_FAILURE";
-    }
-
-    return "UNKNOWN";
-}
 
 // Data models
 struct SensorReading
