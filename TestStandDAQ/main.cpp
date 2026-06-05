@@ -132,6 +132,7 @@ private:
     double baseValue;
     double rateOfChange;
     int failureTimeSeconds;
+    static const int NO_FAILURE = -1;
 
 public:
     Sensor(
@@ -141,7 +142,7 @@ public:
         double criticalLimit,
         double startingValue,
         double changeRate,
-        int failureTime)
+        int failureTime = NO_FAILURE)
         : name(sensorName),
           unit(sensorUnit),
           warningThreshold(warningLimit),
@@ -175,7 +176,7 @@ public:
 
     bool hasFailed(int timeSeconds) const
     {
-        return failureTimeSeconds >= 0 && timeSeconds >= failureTimeSeconds;
+        return failureTimeSeconds != NO_FAILURE && timeSeconds >= failureTimeSeconds;
     }
 
     Status determineStatus(double value) const
@@ -276,8 +277,8 @@ int main() {
     TestStand testStand(5);
 
     testStand.addSensor(Sensor("Temperature", "C", 700.0, 800.0, 650.0, 25.0, 4));
-    testStand.addSensor(Sensor("Pressure", "psi", 235.0, 250.0, 210.0, 8.0, -1));
-    testStand.addSensor(Sensor("Vibration", "g", 1.8, 2.2, 1.2, 0.3, -1));
+    testStand.addSensor(Sensor("Pressure", "psi", 235.0, 250.0, 210.0, 8.0));
+    testStand.addSensor(Sensor("Vibration", "g", 1.8, 2.2, 1.2, 0.3));
 
     if (!testStand.run()) {
         return 1;
