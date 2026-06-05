@@ -5,6 +5,7 @@
 #include <vector>
 #include "Status.h"
 #include "SensorReading.h"
+#include "Sensor.h"
 
 using namespace std;
 
@@ -241,86 +242,6 @@ bool writeTestSummaryToCsv(const TestSummary& summary, const string& fileName)
 }
 
 // Domain classes
-class Sensor
-{
-private:
-    string name;
-    string unit;
-
-    double warningThreshold;
-    double criticalThreshold;
-    double baseValue;
-    double rateOfChange;
-    int failureTimeSeconds;
-    static const int NO_FAILURE = -1;
-
-public:
-    Sensor(
-        string sensorName,
-        string sensorUnit,
-        double warningLimit,
-        double criticalLimit,
-        double startingValue,
-        double changeRate,
-        int failureTime = NO_FAILURE)
-        : name(sensorName),
-          unit(sensorUnit),
-          warningThreshold(warningLimit),
-          criticalThreshold(criticalLimit),
-          baseValue(startingValue),
-          rateOfChange(changeRate),
-          failureTimeSeconds(failureTime)
-    {
-    }
-
-    string getName() const
-    {
-        return name;
-    }
-
-    double simulateValue(int timeSeconds) const
-    {
-        return baseValue + (timeSeconds * rateOfChange);
-    }
-
-    SensorReading createReading(int timeSeconds) const
-    {
-        SensorReading reading;
-        reading.timeSeconds = timeSeconds;
-        reading.sensorName = name;
-        reading.unit = unit;
-
-        if (hasFailed(timeSeconds)) {
-            reading.value = 0.0;
-            reading.status = Status::SENSOR_FAILURE;
-            reading.isValid = false;
-        } else {
-            double value = simulateValue(timeSeconds);
-            reading.value = value;
-            reading.status = determineStatus(value);
-            reading.isValid = true;
-        }
-
-        return reading;
-    }
-
-    bool hasFailed(int timeSeconds) const
-    {
-        return failureTimeSeconds != NO_FAILURE && timeSeconds >= failureTimeSeconds;
-    }
-
-    Status determineStatus(double value) const
-    {
-        if (value >= criticalThreshold) {
-            return Status::CRITICAL;
-        } else if (value >= warningThreshold) {
-            return Status::WARNING;
-        }
-
-        return Status::OK;
-    }
-};
-
 class TestStand
 {
 private:
