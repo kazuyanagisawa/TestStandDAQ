@@ -172,17 +172,20 @@ public:
         return baseValue + (timeSeconds * rateOfChange);
     }
 
-    SensorReading createReading(double value, int timeSeconds) const
+    SensorReading createReading(int timeSeconds) const
     {
         SensorReading reading;
         reading.timeSeconds = timeSeconds;
         reading.sensorName = name;
-        reading.value = value;
         reading.unit = unit;
+
         if (hasFailed(timeSeconds)) {
+            reading.value = 0.0;
             reading.status = Status::SENSOR_FAILURE;
             reading.isValid = false;
         } else {
+            double value = simulateValue(timeSeconds);
+            reading.value = value;
             reading.status = determineStatus(value);
             reading.isValid = true;
         }
@@ -235,8 +238,7 @@ private:
             cout << "Time: " << timeStep << " seconds" << endl;
 
             for (size_t sensorIndex = 0; sensorIndex < sensors.size(); sensorIndex++) {
-                double sensorValue = sensors[sensorIndex].simulateValue(timeStep);
-                SensorReading reading = sensors[sensorIndex].createReading(sensorValue, timeStep);
+                SensorReading reading = sensors[sensorIndex].createReading(timeStep);
                 readings.push_back(reading);
                 printReading(reading);
             }
