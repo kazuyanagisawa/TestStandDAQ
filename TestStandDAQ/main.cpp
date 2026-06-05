@@ -21,6 +21,17 @@ void printReading(const SensorReading& reading)
          << " | Status: " << reading.status << endl;
 }
 
+string determineStatus(double value, double warningThreshold, double criticalThreshold)
+{
+    if (value >= criticalThreshold) {
+        return "CRITICAL";
+    } else if (value >= warningThreshold) {
+        return "WARNING";
+    }
+
+    return "OK";
+}
+
 void printTestSummary(const vector<SensorReading>& readings)
 {
     int okCount = 0;
@@ -64,27 +75,9 @@ int main() {
         double pressurePsi = 210.0 + (timeStep * 8.0);
         double vibrationG = 1.2 + (timeStep * 0.3);
 
-        string temperatureStatus = "OK";
-        string pressureStatus = "OK";
-        string vibrationStatus = "OK";
-
-        if (temperatureCelsius >= 800.0) {
-            temperatureStatus = "CRITICAL";
-        } else if (temperatureCelsius >= 700.0) {
-            temperatureStatus = "WARNING";
-        }
-
-        if (pressurePsi >= 250.0) {
-            pressureStatus = "CRITICAL";
-        } else if (pressurePsi >= 235.0) {
-            pressureStatus = "WARNING";
-        }
-
-        if (vibrationG >= 2.2) {
-            vibrationStatus = "CRITICAL";
-        } else if (vibrationG >= 1.8) {
-            vibrationStatus = "WARNING";
-        }
+        string temperatureStatus = determineStatus(temperatureCelsius, 700.0, 800.0);
+        string pressureStatus = determineStatus(pressurePsi, 235.0, 250.0);
+        string vibrationStatus = determineStatus(vibrationG, 1.8, 2.2);
 
         SensorReading temperatureReading;
         temperatureReading.timeSeconds = timeStep;
