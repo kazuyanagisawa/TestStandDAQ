@@ -47,10 +47,11 @@ bool writeSensorStatisticsToCsv(const vector<SensorStatistics>& statisticsList, 
         return false;
     }
 
-    outputFile << "sensor_name,valid_count,invalid_count,minimum_value,maximum_value,average_value" << endl;
+    outputFile << "sensor_name,health,valid_count,invalid_count,minimum_value,maximum_value,average_value" << endl;
 
     for (const SensorStatistics& statistics : statisticsList) {
         outputFile << statistics.sensorName << ","
+                   << sensorHealthToString(statistics.health) << ","
                    << statistics.validCount << ","
                    << statistics.invalidCount << ",";
 
@@ -78,7 +79,7 @@ bool writeTestSummaryToCsv(const TestSummary& summary, const string& fileName)
         return false;
     }
 
-    outputFile << "total_readings,ok_count,warning_count,critical_count,sensor_failure_count,valid_reading_count,invalid_reading_count,overall_result" << endl;
+    outputFile << "total_readings,ok_count,warning_count,critical_count,anomaly_count,sensor_failure_count,valid_reading_count,invalid_reading_count,overall_result" << endl;
 
     string overallResult = determineOverallResult(summary);
 
@@ -86,6 +87,7 @@ bool writeTestSummaryToCsv(const TestSummary& summary, const string& fileName)
                << summary.okCount << ","
                << summary.warningCount << ","
                << summary.criticalCount << ","
+               << summary.anomalyCount << ","
                << summary.sensorFailureCount << ","
                << summary.validReadingCount << ","
                << summary.invalidReadingCount << ","
