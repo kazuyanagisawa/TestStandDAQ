@@ -225,6 +225,8 @@ public:
             return false;
         }
 
+        readings.clear();
+
         cout << "Configured sensors: "
              << sensors.size()
              << endl
