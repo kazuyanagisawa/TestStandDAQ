@@ -1,4 +1,3 @@
-#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -6,6 +5,7 @@
 #include "SensorReading.h"
 #include "Sensor.h"
 #include "Reporting.h"
+#include "CsvWriter.h"
 
 using namespace std;
 
@@ -14,102 +14,6 @@ const string DATA_LOG_FILE_NAME = "test_log.csv";
 const string SENSOR_STATISTICS_FILE_NAME = "sensor_statistics.csv";
 const string TEST_SUMMARY_FILE_NAME = "test_summary.csv";
 
-
-
-// CSV output helpers
-bool writeReadingsToCsv(const vector<SensorReading>& readings, const string& fileName)
-{
-    ofstream outputFile(fileName);
-
-    if (!outputFile) {
-        cout << "Error: Could not open file for writing: " << fileName << endl;
-        return false;
-    }
-
-    outputFile << "time_seconds,sensor_name,value,unit,status,is_valid" << endl;
-
-    for (const SensorReading& reading : readings) {
-        outputFile << reading.timeSeconds << ","
-                   << reading.sensorName << ",";
-
-        if (reading.isValid) {
-            outputFile << reading.value;
-        } else {
-            outputFile << "INVALID";
-        }
-
-        outputFile << ","
-                   << reading.unit << ","
-                   << statusToString(reading.status) << ","
-                   << reading.isValid << endl;
-    }
-
-    outputFile.close();
-
-    cout << "Data log written to: " << fileName << endl;
-    return true;
-}
-
-bool writeSensorStatisticsToCsv(const vector<SensorStatistics>& statisticsList, const string& fileName)
-{
-    ofstream outputFile(fileName);
-
-    if (!outputFile) {
-        cout << "Error: Could not open file for writing: " << fileName << endl;
-        return false;
-    }
-
-    outputFile << "sensor_name,valid_count,invalid_count,minimum_value,maximum_value,average_value" << endl;
-
-    for (const SensorStatistics& statistics : statisticsList) {
-        outputFile << statistics.sensorName << ","
-                   << statistics.validCount << ","
-                   << statistics.invalidCount << ",";
-
-        if (statistics.validCount > 0) {
-            outputFile << statistics.minimumValue << ","
-                       << statistics.maximumValue << ","
-                       << statistics.averageValue;
-        } else {
-            outputFile << "N/A,N/A,N/A";
-        }
-
-        outputFile << endl;
-    }
-
-    outputFile.close();
-
-    cout << "Statistics report written to: " << fileName << endl;
-    return true;
-}
-
-bool writeTestSummaryToCsv(const TestSummary& summary, const string& fileName)
-{
-    ofstream outputFile(fileName);
-
-    if (!outputFile) {
-        cout << "Error: Could not open file for writing: " << fileName << endl;
-        return false;
-    }
-
-    outputFile << "total_readings,ok_count,warning_count,critical_count,sensor_failure_count,valid_reading_count,invalid_reading_count,overall_result" << endl;
-
-    string overallResult = determineOverallResult(summary);
-
-    outputFile << summary.totalReadings << ","
-               << summary.okCount << ","
-               << summary.warningCount << ","
-               << summary.criticalCount << ","
-               << summary.sensorFailureCount << ","
-               << summary.validReadingCount << ","
-               << summary.invalidReadingCount << ","
-               << overallResult << endl;
-
-    outputFile.close();
-
-    cout << "Test summary written to: " << fileName << endl;
-    return true;
-}
 
 // Domain classes
 class TestStand
