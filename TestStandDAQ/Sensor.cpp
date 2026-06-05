@@ -1,5 +1,21 @@
 #include "Sensor.h"
 
+Sensor::Sensor(const SensorConfig& config)
+    : name(config.name),
+      unit(config.unit),
+      warningThreshold(config.warningThreshold),
+      criticalThreshold(config.criticalThreshold),
+      baseValue(config.baseValue),
+      rateOfChange(config.rateOfChange),
+      noiseAmplitude(config.noiseAmplitude),
+      failureTimeSeconds(config.failureTimeSeconds),
+      spikeTimeSeconds(config.spikeTimeSeconds),
+      spikeMagnitude(config.spikeMagnitude),
+      dropoutStartTimeSeconds(config.dropoutStartTimeSeconds),
+      dropoutDurationSeconds(config.dropoutDurationSeconds)
+{
+}
+
 Sensor::Sensor(
     std::string sensorName,
     std::string sensorUnit,
