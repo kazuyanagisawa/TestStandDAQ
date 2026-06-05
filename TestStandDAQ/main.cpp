@@ -200,13 +200,13 @@ void printReading(const SensorReading& reading)
 }
 
 // CSV output helpers
-void writeReadingsToCsv(const vector<SensorReading>& readings, const string& fileName)
+bool writeReadingsToCsv(const vector<SensorReading>& readings, const string& fileName)
 {
     ofstream outputFile(fileName);
 
     if (!outputFile) {
         cout << "Error: Could not open file for writing: " << fileName << endl;
-        return;
+        return false;
     }
 
     outputFile << "time_seconds,sensor_name,value,unit,status,is_valid" << endl;
@@ -230,15 +230,16 @@ void writeReadingsToCsv(const vector<SensorReading>& readings, const string& fil
     outputFile.close();
 
     cout << "Data log written to: " << fileName << endl;
+    return true;
 }
 
-void writeSensorStatisticsToCsv(const vector<SensorStatistics>& statisticsList, const string& fileName)
+bool writeSensorStatisticsToCsv(const vector<SensorStatistics>& statisticsList, const string& fileName)
 {
     ofstream outputFile(fileName);
 
     if (!outputFile) {
         cout << "Error: Could not open file for writing: " << fileName << endl;
-        return;
+        return false;
     }
 
     outputFile << "sensor_name,valid_count,invalid_count,minimum_value,maximum_value,average_value" << endl;
@@ -262,15 +263,16 @@ void writeSensorStatisticsToCsv(const vector<SensorStatistics>& statisticsList, 
     outputFile.close();
 
     cout << "Statistics report written to: " << fileName << endl;
+    return true;
 }
 
-void writeTestSummaryToCsv(const TestSummary& summary, const string& fileName)
+bool writeTestSummaryToCsv(const TestSummary& summary, const string& fileName)
 {
     ofstream outputFile(fileName);
 
     if (!outputFile) {
         cout << "Error: Could not open file for writing: " << fileName << endl;
-        return;
+        return false;
     }
 
     outputFile << "total_readings,ok_count,warning_count,critical_count,sensor_failure_count,valid_reading_count,invalid_reading_count,overall_result" << endl;
@@ -289,6 +291,7 @@ void writeTestSummaryToCsv(const TestSummary& summary, const string& fileName)
     outputFile.close();
 
     cout << "Test summary written to: " << fileName << endl;
+    return true;
 }
 
 // Domain classes
@@ -460,14 +463,14 @@ public:
         printTestSummary(summary);
     }
 
-    void writeSummaryCsv(const string& fileName) const
+    bool writeSummaryCsv(const string& fileName) const
     {
         if (!validateTestHasRun("write summary CSV")) {
-            return;
+            return false;
         }
 
         TestSummary summary = generateTestSummary(readings);
-        writeTestSummaryToCsv(summary, fileName);
+        return writeTestSummaryToCsv(summary, fileName);
     }
 
     void printSensorStatisticsReport() const
@@ -485,10 +488,10 @@ public:
         }
     }
 
-    void writeSensorStatisticsCsv(const string& fileName) const
+    bool writeSensorStatisticsCsv(const string& fileName) const
     {
         if (!validateTestHasRun("write sensor statistics CSV")) {
-            return;
+            return false;
         }
 
         vector<SensorStatistics> statisticsList;
@@ -498,16 +501,16 @@ public:
             statisticsList.push_back(statistics);
         }
 
-        writeSensorStatisticsToCsv(statisticsList, fileName);
+        return writeSensorStatisticsToCsv(statisticsList, fileName);
     }
 
-    void writeCsvLog(const string& fileName) const
+    bool writeCsvLog(const string& fileName) const
     {
         if (!validateTestHasRun("write data log")) {
-            return;
+            return false;
         }
 
-        writeReadingsToCsv(readings, fileName);
+        return writeReadingsToCsv(readings, fileName);
     }
 };
 
@@ -532,9 +535,18 @@ int main() {
     testStand.printSummary();
     cout << endl;
     testStand.printSensorStatisticsReport();
-    testStand.writeCsvLog(DATA_LOG_FILE_NAME);
-    testStand.writeSensorStatisticsCsv(SENSOR_STATISTICS_FILE_NAME);
-    testStand.writeSummaryCsv(TEST_SUMMARY_FILE_NAME);
+
+    if (!testStand.writeCsvLog(DATA_LOG_FILE_NAME)) {
+        return 1;
+    }
+
+    if (!testStand.writeSensorStatisticsCsv(SENSOR_STATISTICS_FILE_NAME)) {
+        return 1;
+    }
+
+    if (!testStand.writeSummaryCsv(TEST_SUMMARY_FILE_NAME)) {
+        return 1;
+    }
 
     return 0;
 }
