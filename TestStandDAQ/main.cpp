@@ -61,6 +61,17 @@ struct SensorStatistics
     double averageValue;
 };
 
+string determineOverallResult(const TestSummary& summary)
+{
+    if (summary.sensorFailureCount > 0 || summary.criticalCount > 0) {
+        return "FAIL";
+    } else if (summary.warningCount > 0) {
+        return "PASS_WITH_WARNINGS";
+    }
+
+    return "PASS";
+}
+
 TestSummary generateTestSummary(const vector<SensorReading>& readings)
 {
     TestSummary summary;
@@ -104,13 +115,7 @@ void printTestSummary(const TestSummary& summary)
     cout << "Valid readings: " << summary.validReadingCount << endl;
     cout << "Invalid readings: " << summary.invalidReadingCount << endl;
 
-    if (summary.sensorFailureCount > 0 || summary.criticalCount > 0) {
-        cout << "Overall result: FAIL" << endl;
-    } else if (summary.warningCount > 0) {
-        cout << "Overall result: PASS WITH WARNINGS" << endl;
-    } else {
-        cout << "Overall result: PASS" << endl;
-    }
+    cout << "Overall result: " << determineOverallResult(summary) << endl;
 }
 
 SensorStatistics generateSensorStatistics(const vector<SensorReading>& readings, const string& sensorName)
@@ -260,15 +265,7 @@ void writeTestSummaryToCsv(const TestSummary& summary, const string& fileName)
 
     outputFile << "total_readings,ok_count,warning_count,critical_count,sensor_failure_count,valid_reading_count,invalid_reading_count,overall_result" << endl;
 
-    string overallResult;
-
-    if (summary.sensorFailureCount > 0 || summary.criticalCount > 0) {
-        overallResult = "FAIL";
-    } else if (summary.warningCount > 0) {
-        overallResult = "PASS_WITH_WARNINGS";
-    } else {
-        overallResult = "PASS";
-    }
+    string overallResult = determineOverallResult(summary);
 
     outputFile << summary.totalReadings << ","
                << summary.okCount << ","
