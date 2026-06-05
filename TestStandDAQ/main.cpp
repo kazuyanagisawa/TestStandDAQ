@@ -96,6 +96,14 @@ public:
 
     double warningThreshold;
     double criticalThreshold;
+
+    Sensor(string sensorName, string sensorUnit, double warningLimit, double criticalLimit)
+    {
+        name = sensorName;
+        unit = sensorUnit;
+        warningThreshold = warningLimit;
+        criticalThreshold = criticalLimit;
+    }
 };
 
 int main() {
@@ -105,23 +113,9 @@ int main() {
 
     vector<SensorReading> readings;
     
-    Sensor temperatureSensor;
-    temperatureSensor.name = "Temperature";
-    temperatureSensor.unit = "C";
-    temperatureSensor.warningThreshold = 700.0;
-    temperatureSensor.criticalThreshold = 800.0;
-
-    Sensor pressureSensor;
-    pressureSensor.name = "Pressure";
-    pressureSensor.unit = "psi";
-    pressureSensor.warningThreshold = 235.0;
-    pressureSensor.criticalThreshold = 250.0;
-
-    Sensor vibrationSensor;
-    vibrationSensor.name = "Vibration";
-    vibrationSensor.unit = "g";
-    vibrationSensor.warningThreshold = 1.8;
-    vibrationSensor.criticalThreshold = 2.2;
+    Sensor temperatureSensor("Temperature", "C", 700.0, 800.0);
+    Sensor pressureSensor("Pressure", "psi", 235.0, 250.0);
+    Sensor vibrationSensor("Vibration", "g", 1.8, 2.2);
 
     for (int timeStep = 0; timeStep < 5; timeStep++) {
         double temperatureCelsius = 650.0 + (timeStep * 25.0);
