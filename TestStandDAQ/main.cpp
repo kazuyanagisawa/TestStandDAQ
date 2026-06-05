@@ -134,28 +134,28 @@ public:
     }
 };
 
-void runAcquisitionLoop(const vector<Sensor>& sensors, vector<SensorReading>& readings, int durationSeconds)
-{
-    for (int timeStep = 0; timeStep < durationSeconds; timeStep++) {
-        cout << "Time: " << timeStep << " seconds" << endl;
-
-        for (size_t sensorIndex = 0; sensorIndex < sensors.size(); sensorIndex++) {
-            double sensorValue = sensors[sensorIndex].simulateValue(timeStep);
-            SensorReading reading = sensors[sensorIndex].createReading(sensorValue, timeStep);
-            readings.push_back(reading);
-            printReading(reading);
-        }
-
-        cout << endl;
-    }
-}
-
 class TestStand
 {
 private:
     vector<Sensor> sensors;
     vector<SensorReading> readings;
     int durationSeconds;
+
+    void runAcquisitionLoop()
+    {
+        for (int timeStep = 0; timeStep < durationSeconds; timeStep++) {
+            cout << "Time: " << timeStep << " seconds" << endl;
+
+            for (size_t sensorIndex = 0; sensorIndex < sensors.size(); sensorIndex++) {
+                double sensorValue = sensors[sensorIndex].simulateValue(timeStep);
+                SensorReading reading = sensors[sensorIndex].createReading(sensorValue, timeStep);
+                readings.push_back(reading);
+                printReading(reading);
+            }
+
+            cout << endl;
+        }
+    }
 
 public:
     TestStand(int testDurationSeconds)
@@ -175,7 +175,7 @@ public:
              << endl
              << endl;
 
-        runAcquisitionLoop(sensors, readings, durationSeconds);
+        runAcquisitionLoop();
     }
 
     void printSummary() const
