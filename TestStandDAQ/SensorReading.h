@@ -4,13 +4,6 @@
 #include <string>
 #include "Status.h"
 
-enum class SensorHealth
-{
-    HEALTHY,
-    DEGRADED,
-    FAILED
-};
-
 struct SensorReading
 {
     int timeSeconds;
@@ -41,6 +34,7 @@ struct SensorStatistics
     double minimumValue;
     double maximumValue;
     double averageValue;
+    SensorHealth health;
 };
 
 #endif

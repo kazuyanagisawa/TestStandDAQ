@@ -12,6 +12,15 @@ enum class Status
     SENSOR_FAILURE
 };
 
+enum class SensorHealth
+{
+    HEALTHY,
+    DEGRADED,
+    FAILED
+};
+
 std::string statusToString(Status status);
+
+std::string sensorHealthToString(SensorHealth health);
 
 #endif

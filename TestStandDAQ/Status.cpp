@@ -17,3 +17,17 @@ std::string statusToString(Status status)
 
     return "UNKNOWN";
 }
+
+std::string sensorHealthToString(SensorHealth health)
+{
+    switch (health) {
+        case SensorHealth::HEALTHY:
+            return "HEALTHY";
+        case SensorHealth::DEGRADED:
+            return "DEGRADED";
+        case SensorHealth::FAILED:
+            return "FAILED";
+    }
+
+    return "UNKNOWN";
+}
