@@ -111,6 +111,18 @@ int main() {
     temperatureSensor.warningThreshold = 700.0;
     temperatureSensor.criticalThreshold = 800.0;
 
+    Sensor pressureSensor;
+    pressureSensor.name = "Pressure";
+    pressureSensor.unit = "psi";
+    pressureSensor.warningThreshold = 235.0;
+    pressureSensor.criticalThreshold = 250.0;
+
+    Sensor vibrationSensor;
+    vibrationSensor.name = "Vibration";
+    vibrationSensor.unit = "g";
+    vibrationSensor.warningThreshold = 1.8;
+    vibrationSensor.criticalThreshold = 2.2;
+
     for (int timeStep = 0; timeStep < 5; timeStep++) {
         double temperatureCelsius = 650.0 + (timeStep * 25.0);
         double pressurePsi = 210.0 + (timeStep * 8.0);
@@ -121,8 +133,16 @@ int main() {
             temperatureSensor.warningThreshold,
             temperatureSensor.criticalThreshold
         );
-        string pressureStatus = determineStatus(pressurePsi, 235.0, 250.0);
-        string vibrationStatus = determineStatus(vibrationG, 1.8, 2.2);
+        string pressureStatus = determineStatus(
+            pressurePsi,
+            pressureSensor.warningThreshold,
+            pressureSensor.criticalThreshold
+        );
+        string vibrationStatus = determineStatus(
+            vibrationG,
+            vibrationSensor.warningThreshold,
+            vibrationSensor.criticalThreshold
+        );
 
         SensorReading temperatureReading;
         temperatureReading.timeSeconds = timeStep;
@@ -133,16 +153,16 @@ int main() {
 
         SensorReading pressureReading;
         pressureReading.timeSeconds = timeStep;
-        pressureReading.sensorName = "Pressure";
+        pressureReading.sensorName = pressureSensor.name;
         pressureReading.value = pressurePsi;
-        pressureReading.unit = "psi";
+        pressureReading.unit = pressureSensor.unit;
         pressureReading.status = pressureStatus;
 
         SensorReading vibrationReading;
         vibrationReading.timeSeconds = timeStep;
-        vibrationReading.sensorName = "Vibration";
+        vibrationReading.sensorName = vibrationSensor.name;
         vibrationReading.value = vibrationG;
-        vibrationReading.unit = "g";
+        vibrationReading.unit = vibrationSensor.unit;
         vibrationReading.status = vibrationStatus;
 
         readings.push_back(temperatureReading);
