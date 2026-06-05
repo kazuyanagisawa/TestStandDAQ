@@ -13,9 +13,41 @@ const string TEST_SUMMARY_FILE_NAME = "test_summary.csv";
 
 void configureSensors(TestStand& testStand)
 {
-    testStand.addSensor(Sensor("Temperature", "C", 700.0, 800.0, 650.0, 25.0, 2.0, 4));
-    testStand.addSensor(Sensor("Pressure", "psi", 235.0, 250.0, 210.0, 8.0, 1.0, Sensor::NO_FAILURE, Sensor::NO_SPIKE, 0.0, 2, 2));
-    testStand.addSensor(Sensor("Vibration", "g", 1.8, 2.2, 1.2, 0.3, 0.05, Sensor::NO_FAILURE, 3, 1.0));
+    SensorConfig temperatureConfig;
+    temperatureConfig.name = "Temperature";
+    temperatureConfig.unit = "C";
+    temperatureConfig.warningThreshold = 700.0;
+    temperatureConfig.criticalThreshold = 800.0;
+    temperatureConfig.baseValue = 650.0;
+    temperatureConfig.rateOfChange = 25.0;
+    temperatureConfig.noiseAmplitude = 2.0;
+    temperatureConfig.failureTimeSeconds = 4;
+
+    SensorConfig pressureConfig;
+    pressureConfig.name = "Pressure";
+    pressureConfig.unit = "psi";
+    pressureConfig.warningThreshold = 235.0;
+    pressureConfig.criticalThreshold = 250.0;
+    pressureConfig.baseValue = 210.0;
+    pressureConfig.rateOfChange = 8.0;
+    pressureConfig.noiseAmplitude = 1.0;
+    pressureConfig.dropoutStartTimeSeconds = 2;
+    pressureConfig.dropoutDurationSeconds = 2;
+
+    SensorConfig vibrationConfig;
+    vibrationConfig.name = "Vibration";
+    vibrationConfig.unit = "g";
+    vibrationConfig.warningThreshold = 1.8;
+    vibrationConfig.criticalThreshold = 2.2;
+    vibrationConfig.baseValue = 1.2;
+    vibrationConfig.rateOfChange = 0.3;
+    vibrationConfig.noiseAmplitude = 0.05;
+    vibrationConfig.spikeTimeSeconds = 3;
+    vibrationConfig.spikeMagnitude = 1.0;
+
+    testStand.addSensor(Sensor(temperatureConfig));
+    testStand.addSensor(Sensor(pressureConfig));
+    testStand.addSensor(Sensor(vibrationConfig));
 }
 
 int main() {
