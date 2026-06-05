@@ -78,12 +78,24 @@ SensorStatistics generateSensorStatistics(const vector<SensorReading>& readings,
     statistics.minimumValue = numeric_limits<double>::max();
     statistics.maximumValue = numeric_limits<double>::lowest();
     statistics.averageValue = 0.0;
+    statistics.health = SensorHealth::HEALTHY;
 
+    int warningCount = 0;
+    int criticalCount = 0;
+    int anomalyCount = 0;
     double totalValue = 0.0;
 
     for (const SensorReading& reading : readings) {
         if (reading.sensorName != sensorName) {
             continue;
+        }
+
+        if (reading.status == Status::WARNING) {
+            warningCount++;
+        } else if (reading.status == Status::CRITICAL) {
+            criticalCount++;
+        } else if (reading.status == Status::ANOMALY) {
+            anomalyCount++;
         }
 
         if (!reading.isValid) {
@@ -110,12 +122,21 @@ SensorStatistics generateSensorStatistics(const vector<SensorReading>& readings,
         statistics.maximumValue = 0.0;
     }
 
+    if (statistics.invalidCount > 0) {
+        statistics.health = SensorHealth::FAILED;
+    } else if (criticalCount > 0 || anomalyCount > 0 || warningCount > 0) {
+        statistics.health = SensorHealth::DEGRADED;
+    } else {
+        statistics.health = SensorHealth::HEALTHY;
+    }
+
     return statistics;
 }
 
 void printSensorStatistics(const SensorStatistics& statistics)
 {
     cout << statistics.sensorName << " statistics" << endl;
+    cout << "Health: " << sensorHealthToString(statistics.health) << endl;
     cout << "Valid readings: " << statistics.validCount << endl;
     cout << "Invalid readings: " << statistics.invalidCount << endl;
 
