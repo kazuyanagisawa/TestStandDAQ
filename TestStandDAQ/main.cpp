@@ -36,6 +36,7 @@ struct SensorReading
     double value;
     string unit;
     Status status;
+    bool isValid;
 };
 
 struct TestSummary
@@ -91,10 +92,15 @@ void printTestSummary(const TestSummary& summary)
 
 void printReading(const SensorReading& reading)
 {
-    cout << reading.sensorName << ": "
-         << reading.value << " "
-         << reading.unit
-         << " | Status: " << statusToString(reading.status) << endl;
+    cout << reading.sensorName << ": ";
+
+    if (reading.isValid) {
+        cout << reading.value << " " << reading.unit;
+    } else {
+        cout << "INVALID";
+    }
+
+    cout << " | Status: " << statusToString(reading.status) << endl;
 }
 
 void writeReadingsToCsv(const vector<SensorReading>& readings, const string& fileName)
@@ -106,14 +112,22 @@ void writeReadingsToCsv(const vector<SensorReading>& readings, const string& fil
         return;
     }
 
-    outputFile << "time_seconds,sensor_name,value,unit,status" << endl;
+    outputFile << "time_seconds,sensor_name,value,unit,status,is_valid" << endl;
 
     for (const SensorReading& reading : readings) {
         outputFile << reading.timeSeconds << ","
-                   << reading.sensorName << ","
-                   << reading.value << ","
+                   << reading.sensorName << ",";
+
+        if (reading.isValid) {
+            outputFile << reading.value;
+        } else {
+            outputFile << "INVALID";
+        }
+
+        outputFile << ","
                    << reading.unit << ","
-                   << statusToString(reading.status) << endl;
+                   << statusToString(reading.status) << ","
+                   << reading.isValid << endl;
     }
 
     outputFile.close();
@@ -167,8 +181,10 @@ public:
         reading.unit = unit;
         if (hasFailed(timeSeconds)) {
             reading.status = Status::SENSOR_FAILURE;
+            reading.isValid = false;
         } else {
             reading.status = determineStatus(value);
+            reading.isValid = true;
         }
 
         return reading;
