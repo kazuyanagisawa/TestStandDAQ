@@ -128,6 +128,17 @@ int main() {
     Sensor temperatureSensor("Temperature", "C", 700.0, 800.0);
     Sensor pressureSensor("Pressure", "psi", 235.0, 250.0);
     Sensor vibrationSensor("Vibration", "g", 1.8, 2.2);
+    
+    vector<Sensor> sensors;
+
+    sensors.push_back(temperatureSensor);
+    sensors.push_back(pressureSensor);
+    sensors.push_back(vibrationSensor);
+    
+    cout << "Configured sensors: "
+         << sensors.size()
+         << endl
+         << endl;
 
     for (int timeStep = 0; timeStep < 5; timeStep++) {
         double temperatureCelsius = 650.0 + (timeStep * 25.0);
