@@ -79,7 +79,7 @@ void writeReadingsToCsv(const vector<SensorReading>& readings, const string& fil
 
 class Sensor
 {
-public:
+private:
     string name;
     string unit;
 
@@ -88,6 +88,7 @@ public:
     double baseValue;
     double rateOfChange;
 
+public:
     Sensor(
         string sensorName,
         string sensorUnit,
