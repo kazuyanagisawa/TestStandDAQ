@@ -249,6 +249,41 @@ void writeSensorStatisticsToCsv(const vector<SensorStatistics>& statisticsList, 
     cout << "Statistics report written to: " << fileName << endl;
 }
 
+void writeTestSummaryToCsv(const TestSummary& summary, const string& fileName)
+{
+    ofstream outputFile(fileName);
+
+    if (!outputFile) {
+        cout << "Error: Could not open file for writing: " << fileName << endl;
+        return;
+    }
+
+    outputFile << "total_readings,ok_count,warning_count,critical_count,sensor_failure_count,valid_reading_count,invalid_reading_count,overall_result" << endl;
+
+    string overallResult;
+
+    if (summary.sensorFailureCount > 0 || summary.criticalCount > 0) {
+        overallResult = "FAIL";
+    } else if (summary.warningCount > 0) {
+        overallResult = "PASS_WITH_WARNINGS";
+    } else {
+        overallResult = "PASS";
+    }
+
+    outputFile << summary.totalReadings << ","
+               << summary.okCount << ","
+               << summary.warningCount << ","
+               << summary.criticalCount << ","
+               << summary.sensorFailureCount << ","
+               << summary.validReadingCount << ","
+               << summary.invalidReadingCount << ","
+               << overallResult << endl;
+
+    outputFile.close();
+
+    cout << "Test summary written to: " << fileName << endl;
+}
+
 class Sensor
 {
 private:
@@ -400,6 +435,12 @@ public:
         printTestSummary(summary);
     }
 
+    void writeSummaryCsv(const string& fileName) const
+    {
+        TestSummary summary = generateTestSummary(readings);
+        writeTestSummaryToCsv(summary, fileName);
+    }
+
     void printSensorStatisticsReport() const
     {
         cout << "SENSOR STATISTICS" << endl;
@@ -451,6 +492,7 @@ int main() {
     testStand.printSensorStatisticsReport();
     testStand.writeCsvLog("test_log.csv");
     testStand.writeSensorStatisticsCsv("sensor_statistics.csv");
+    testStand.writeSummaryCsv("test_summary.csv");
 
     return 0;
 }
