@@ -38,19 +38,6 @@ bool TestStand::validateTestHasRun(const string& operationName) const
     return true;
 }
 
-int TestStand::countAnomalies() const
-{
-    int anomalyCount = 0;
-
-    for (const SensorReading& reading : readings) {
-        if (reading.status == Status::ANOMALY) {
-            anomalyCount++;
-        }
-    }
-
-    return anomalyCount;
-}
-
 void TestStand::runAcquisitionLoop()
 {
     for (int timeStep = 0; timeStep < durationSeconds; timeStep++) {

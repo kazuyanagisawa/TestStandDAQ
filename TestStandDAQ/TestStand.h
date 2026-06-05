@@ -15,7 +15,6 @@ private:
 
     int durationSeconds;
     bool hasRun;
-    int countAnomalies() const;
 
     bool validateConfiguration() const;
     bool validateTestHasRun(const std::string& operationName) const;
