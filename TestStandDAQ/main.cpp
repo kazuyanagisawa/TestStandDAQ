@@ -6,6 +6,11 @@
 
 using namespace std;
 
+const int TEST_DURATION_SECONDS = 5;
+const string DATA_LOG_FILE_NAME = "test_log.csv";
+const string SENSOR_STATISTICS_FILE_NAME = "sensor_statistics.csv";
+const string TEST_SUMMARY_FILE_NAME = "test_summary.csv";
+
 // Status definitions
 enum class Status
 {
@@ -512,7 +517,7 @@ int main() {
     cout << "System initialized successfully." << endl;
     cout << endl;
 
-    TestStand testStand(5);
+    TestStand testStand(TEST_DURATION_SECONDS);
 
     testStand.addSensor(Sensor("Temperature", "C", 700.0, 800.0, 650.0, 25.0, 4));
     testStand.addSensor(Sensor("Pressure", "psi", 235.0, 250.0, 210.0, 8.0));
@@ -527,9 +532,9 @@ int main() {
     testStand.printSummary();
     cout << endl;
     testStand.printSensorStatisticsReport();
-    testStand.writeCsvLog("test_log.csv");
-    testStand.writeSensorStatisticsCsv("sensor_statistics.csv");
-    testStand.writeSummaryCsv("test_summary.csv");
+    testStand.writeCsvLog(DATA_LOG_FILE_NAME);
+    testStand.writeSensorStatisticsCsv(SENSOR_STATISTICS_FILE_NAME);
+    testStand.writeSummaryCsv(TEST_SUMMARY_FILE_NAME);
 
     return 0;
 }
