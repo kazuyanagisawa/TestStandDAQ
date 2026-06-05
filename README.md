@@ -87,3 +87,110 @@ Sensor failures: 2
 
 Valid readings: 13
 Invalid readings: 2
+```
+
+### Sensor Statistics
+
+```text
+Temperature statistics
+Health: FAILED
+Valid readings: 4
+Invalid readings: 1
+Minimum value: 648
+Maximum value: 752
+Average value: 701
+
+Pressure statistics
+Health: FAILED
+Valid readings: 3
+Invalid readings: 2
+Minimum value: 209
+Maximum value: 226
+Average value: 218
+
+Vibration statistics
+Health: DEGRADED
+Valid readings: 5
+Invalid readings: 0
+Minimum value: 1.15
+Maximum value: 2.25
+Average value: 1.48
+```
+
+## Project Evolution
+
+Rather than building the final application all at once, the project was developed through a series of small, testable iterations.
+
+Major milestones included:
+
+1. Basic sensor simulation and acquisition loop
+2. Threshold monitoring and status reporting
+3. CSV export and reporting infrastructure
+4. Refactoring into modular components
+5. Sensor configuration management with SensorConfig
+6. Fault injection (failures, spikes, and dropouts)
+7. Anomaly detection
+8. Sensor health assessment
+9. Enhanced reporting and CSV exports
+
+This incremental approach mirrors how production engineering software is commonly developed and maintained.
+
+## Technology Stack
+
+- C++17
+- Standard Template Library (STL)
+- Object-Oriented Programming
+- File I/O
+- CSV Data Export
+- Git
+- GitHub
+- Xcode
+
+## Project Structure
+
+```text
+TestStandDAQ/
+├── Sensor
+│   └── Sensor simulation and fault injection
+├── TestStand
+│   └── Acquisition coordination and reporting
+├── SensorReading
+│   └── Shared data models and summary structures
+├── Reporting
+│   └── Statistics, summaries, and health assessment
+├── CsvWriter
+│   └── CSV export utilities
+├── Status
+│   └── Status and health classifications
+└── main.cpp
+    └── Application entry point and configuration
+```
+
+## Resume Project Summary
+
+Developed a modular C++ test stand data acquisition and monitoring simulation that models sensor behavior, injects realistic fault conditions, evaluates sensor health, and generates automated reports. Implemented anomaly detection, fault simulation, statistical analysis, CSV export functionality, and object-oriented system architecture through an incremental engineering-focused development process.
+
+## Skills Demonstrated
+
+- C++
+- Object-Oriented Design
+- Software Refactoring
+- Data Acquisition Concepts
+- Fault Detection and Monitoring
+- Data Modeling
+- CSV File Processing
+- Modular Software Architecture
+- Git Version Control
+- Technical Documentation
+
+## Future Enhancements
+
+Potential future improvements include:
+
+- Real-time data visualization dashboard
+- Configuration file support for sensor definitions
+- Additional anomaly detection techniques
+- Unit testing framework integration
+- Database-backed data storage
+
+These ideas were intentionally left out of the current version to keep the project focused, maintainable, and representative of an incremental engineering workflow.
