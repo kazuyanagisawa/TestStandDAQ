@@ -150,35 +150,63 @@ void runAcquisitionLoop(const vector<Sensor>& sensors, vector<SensorReading>& re
     }
 }
 
+class TestStand
+{
+private:
+    vector<Sensor> sensors;
+    vector<SensorReading> readings;
+    int durationSeconds;
+
+public:
+    TestStand(int testDurationSeconds)
+    {
+        durationSeconds = testDurationSeconds;
+    }
+
+    void addSensor(const Sensor& sensor)
+    {
+        sensors.push_back(sensor);
+    }
+
+    void run()
+    {
+        cout << "Configured sensors: "
+             << sensors.size()
+             << endl
+             << endl;
+
+        runAcquisitionLoop(sensors, readings, durationSeconds);
+    }
+
+    void printSummary() const
+    {
+        printTestSummary(readings);
+    }
+
+    void writeCsvLog(const string& fileName) const
+    {
+        writeReadingsToCsv(readings, fileName);
+    }
+};
+
 int main() {
     cout << "Starting Test Stand Data Acquisition Simulation..." << endl;
     cout << "System initialized successfully." << endl;
     cout << endl;
 
-    vector<SensorReading> readings;
-    
-    Sensor temperatureSensor("Temperature", "C", 700.0, 800.0, 650.0, 25.0);
-    Sensor pressureSensor("Pressure", "psi", 235.0, 250.0, 210.0, 8.0);
-    Sensor vibrationSensor("Vibration", "g", 1.8, 2.2, 1.2, 0.3);
-    
-    vector<Sensor> sensors;
+    TestStand testStand(5);
 
-    sensors.push_back(temperatureSensor);
-    sensors.push_back(pressureSensor);
-    sensors.push_back(vibrationSensor);
-    
-    cout << "Configured sensors: "
-         << sensors.size()
-         << endl
-         << endl;
+    testStand.addSensor(Sensor("Temperature", "C", 700.0, 800.0, 650.0, 25.0));
+    testStand.addSensor(Sensor("Pressure", "psi", 235.0, 250.0, 210.0, 8.0));
+    testStand.addSensor(Sensor("Vibration", "g", 1.8, 2.2, 1.2, 0.3));
 
-    runAcquisitionLoop(sensors, readings, 5);
+    testStand.run();
 
     cout << "Test complete." << endl;
     cout << endl;
-    printTestSummary(readings);
+    testStand.printSummary();
     cout << endl;
-    writeReadingsToCsv(readings, "test_log.csv");
+    testStand.writeCsvLog("test_log.csv");
 
     return 0;
 }
