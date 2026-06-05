@@ -8,7 +8,9 @@ Sensor::Sensor(
     double startingValue,
     double changeRate,
     double noiseLimit,
-    int failureTime)
+    int failureTime,
+    int spikeTime,
+    double spikeSize)
     : name(sensorName),
       unit(sensorUnit),
       warningThreshold(warningLimit),
@@ -16,7 +18,9 @@ Sensor::Sensor(
       baseValue(startingValue),
       rateOfChange(changeRate),
       noiseAmplitude(noiseLimit),
-      failureTimeSeconds(failureTime)
+      failureTimeSeconds(failureTime),
+      spikeTimeSeconds(spikeTime),
+      spikeMagnitude(spikeSize)
 {
 }
 
@@ -29,8 +33,13 @@ double Sensor::simulateValue(int timeSeconds) const
 {
     double deterministicValue = baseValue + (timeSeconds * rateOfChange);
     double simpleNoise = noiseAmplitude * ((timeSeconds % 3) - 1);
+    double simulatedValue = deterministicValue + simpleNoise;
 
-    return deterministicValue + simpleNoise;
+    if (hasSpike(timeSeconds)) {
+        simulatedValue += spikeMagnitude;
+    }
+
+    return simulatedValue;
 }
 
 SensorReading Sensor::createReading(int timeSeconds) const
@@ -57,6 +66,11 @@ SensorReading Sensor::createReading(int timeSeconds) const
 bool Sensor::hasFailed(int timeSeconds) const
 {
     return failureTimeSeconds != NO_FAILURE && timeSeconds >= failureTimeSeconds;
+}
+
+bool Sensor::hasSpike(int timeSeconds) const
+{
+    return spikeTimeSeconds != NO_SPIKE && timeSeconds == spikeTimeSeconds;
 }
 
 Status Sensor::determineStatus(double value) const
