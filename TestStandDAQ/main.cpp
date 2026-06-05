@@ -12,6 +12,17 @@ enum class Status
     CRITICAL
 };
 
+string statusToString(Status status)
+{
+    if (status == Status::CRITICAL) {
+        return "CRITICAL";
+    } else if (status == Status::WARNING) {
+        return "WARNING";
+    }
+
+    return "OK";
+}
+
 struct SensorReading
 {
     int timeSeconds;
@@ -26,7 +37,7 @@ void printReading(const SensorReading& reading)
     cout << reading.sensorName << ": "
          << reading.value << " "
          << reading.unit
-         << " | Status: " << reading.status << endl;
+         << " | Status: " << statusToString(reading.status) << endl;
 }
 
 void printTestSummary(const vector<SensorReading>& readings)
@@ -36,9 +47,9 @@ void printTestSummary(const vector<SensorReading>& readings)
     int criticalCount = 0;
 
     for (const SensorReading& reading : readings) {
-        if (reading.status == "CRITICAL") {
+        if (reading.status == Status::CRITICAL) {
             criticalCount++;
-        } else if (reading.status == "WARNING") {
+        } else if (reading.status == Status::WARNING) {
             warningCount++;
         } else {
             okCount++;
@@ -76,7 +87,7 @@ void writeReadingsToCsv(const vector<SensorReading>& readings, const string& fil
                    << reading.sensorName << ","
                    << reading.value << ","
                    << reading.unit << ","
-                   << reading.status << endl;
+                   << statusToString(reading.status) << endl;
     }
 
     outputFile.close();
@@ -129,15 +140,15 @@ public:
         return reading;
     }
 
-    string determineStatus(double value) const
+    Status determineStatus(double value) const
     {
         if (value >= criticalThreshold) {
-            return "CRITICAL";
+            return Status::CRITICAL;
         } else if (value >= warningThreshold) {
-            return "WARNING";
+            return Status::WARNING;
         }
 
-        return "OK";
+        return Status::OK;
     }
 };
 
