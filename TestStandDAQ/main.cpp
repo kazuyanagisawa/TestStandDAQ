@@ -367,6 +367,7 @@ private:
     vector<Sensor> sensors;
     vector<SensorReading> readings;
     int durationSeconds;
+    bool hasRun;
 
     bool validateConfiguration() const
     {
@@ -400,7 +401,8 @@ private:
 
 public:
     TestStand(int testDurationSeconds)
-        : durationSeconds(testDurationSeconds)
+        : durationSeconds(testDurationSeconds),
+          hasRun(false)
     {
     }
 
@@ -423,23 +425,39 @@ public:
              << endl;
 
         runAcquisitionLoop();
+        hasRun = true;
         return true;
     }
 
     void printSummary() const
     {
+        if (!hasRun) {
+            cout << "Error: Cannot print summary before test run." << endl;
+            return;
+        }
+
         TestSummary summary = generateTestSummary(readings);
         printTestSummary(summary);
     }
 
     void writeSummaryCsv(const string& fileName) const
     {
+        if (!hasRun) {
+            cout << "Error: Cannot write summary CSV before test run." << endl;
+            return;
+        }
+
         TestSummary summary = generateTestSummary(readings);
         writeTestSummaryToCsv(summary, fileName);
     }
 
     void printSensorStatisticsReport() const
     {
+        if (!hasRun) {
+            cout << "Error: Cannot print sensor statistics before test run." << endl;
+            return;
+        }
+
         cout << "SENSOR STATISTICS" << endl;
 
         for (const Sensor& sensor : sensors) {
@@ -451,6 +469,11 @@ public:
 
     void writeSensorStatisticsCsv(const string& fileName) const
     {
+        if (!hasRun) {
+            cout << "Error: Cannot write sensor statistics CSV before test run." << endl;
+            return;
+        }
+
         vector<SensorStatistics> statisticsList;
 
         for (const Sensor& sensor : sensors) {
@@ -463,6 +486,11 @@ public:
 
     void writeCsvLog(const string& fileName) const
     {
+        if (!hasRun) {
+            cout << "Error: Cannot write data log before test run." << endl;
+            return;
+        }
+
         writeReadingsToCsv(readings, fileName);
     }
 };
