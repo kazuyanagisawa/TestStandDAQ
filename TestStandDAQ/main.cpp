@@ -46,6 +46,8 @@ struct TestSummary
     int warningCount;
     int criticalCount;
     int sensorFailureCount;
+    int validReadingCount;
+    int invalidReadingCount;
 };
 
 TestSummary generateTestSummary(const vector<SensorReading>& readings)
@@ -56,8 +58,16 @@ TestSummary generateTestSummary(const vector<SensorReading>& readings)
     summary.warningCount = 0;
     summary.criticalCount = 0;
     summary.sensorFailureCount = 0;
+    summary.validReadingCount = 0;
+    summary.invalidReadingCount = 0;
 
     for (const SensorReading& reading : readings) {
+        if (reading.isValid) {
+            summary.validReadingCount++;
+        } else {
+            summary.invalidReadingCount++;
+        }
+
         if (reading.status == Status::SENSOR_FAILURE) {
             summary.sensorFailureCount++;
         } else if (reading.status == Status::CRITICAL) {
@@ -80,6 +90,8 @@ void printTestSummary(const TestSummary& summary)
     cout << "Warning readings: " << summary.warningCount << endl;
     cout << "Critical readings: " << summary.criticalCount << endl;
     cout << "Sensor failures: " << summary.sensorFailureCount << endl;
+    cout << "Valid readings: " << summary.validReadingCount << endl;
+    cout << "Invalid readings: " << summary.invalidReadingCount << endl;
 
     if (summary.sensorFailureCount > 0 || summary.criticalCount > 0) {
         cout << "Overall result: FAIL" << endl;
