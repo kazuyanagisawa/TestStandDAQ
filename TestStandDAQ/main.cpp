@@ -116,15 +116,19 @@ int main() {
         double pressurePsi = 210.0 + (timeStep * 8.0);
         double vibrationG = 1.2 + (timeStep * 0.3);
 
-        string temperatureStatus = determineStatus(temperatureCelsius, 700.0, 800.0);
+        string temperatureStatus = determineStatus(
+            temperatureCelsius,
+            temperatureSensor.warningThreshold,
+            temperatureSensor.criticalThreshold
+        );
         string pressureStatus = determineStatus(pressurePsi, 235.0, 250.0);
         string vibrationStatus = determineStatus(vibrationG, 1.8, 2.2);
 
         SensorReading temperatureReading;
         temperatureReading.timeSeconds = timeStep;
-        temperatureReading.sensorName = "Temperature";
+        temperatureReading.sensorName = temperatureSensor.name;
         temperatureReading.value = temperatureCelsius;
-        temperatureReading.unit = "C";
+        temperatureReading.unit = temperatureSensor.unit;
         temperatureReading.status = temperatureStatus;
 
         SensorReading pressureReading;
