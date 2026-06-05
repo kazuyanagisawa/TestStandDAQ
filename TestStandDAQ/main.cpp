@@ -21,6 +21,37 @@ void printReading(const SensorReading& reading)
          << " | Status: " << reading.status << endl;
 }
 
+void printTestSummary(const vector<SensorReading>& readings)
+{
+    int okCount = 0;
+    int warningCount = 0;
+    int criticalCount = 0;
+
+    for (const SensorReading& reading : readings) {
+        if (reading.status == "CRITICAL") {
+            criticalCount++;
+        } else if (reading.status == "WARNING") {
+            warningCount++;
+        } else {
+            okCount++;
+        }
+    }
+
+    cout << "TEST SUMMARY" << endl;
+    cout << "Total readings collected: " << readings.size() << endl;
+    cout << "OK readings: " << okCount << endl;
+    cout << "Warning readings: " << warningCount << endl;
+    cout << "Critical readings: " << criticalCount << endl;
+
+    if (criticalCount > 0) {
+        cout << "Overall result: FAIL" << endl;
+    } else if (warningCount > 0) {
+        cout << "Overall result: PASS WITH WARNINGS" << endl;
+    } else {
+        cout << "Overall result: PASS" << endl;
+    }
+}
+
 int main() {
     cout << "Starting Test Stand Data Acquisition Simulation..." << endl;
     cout << "System initialized successfully." << endl;
@@ -88,7 +119,8 @@ int main() {
     }
 
     cout << "Test complete." << endl;
-    cout << "Total readings collected: " << readings.size() << endl;
+    cout << endl;
+    printTestSummary(readings);
 
     return 0;
 }
