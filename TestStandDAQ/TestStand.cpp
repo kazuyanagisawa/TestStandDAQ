@@ -97,10 +97,6 @@ void TestStand::printSummary() const
 
     TestSummary summary = generateTestSummary(readings);
     printTestSummary(summary);
-
-    cout << "Anomalies detected: "
-         << countAnomalies()
-         << endl;
 }
 
 void TestStand::printSensorStatisticsReport() const
