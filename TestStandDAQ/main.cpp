@@ -146,9 +146,14 @@ int main() {
         sensorValues.push_back(210.0 + (timeStep * 8.0));
         sensorValues.push_back(1.2 + (timeStep * 0.3));
 
+        if (sensorValues.size() != sensors.size()) {
+            cout << "Error: Sensor value count does not match configured sensor count." << endl;
+            return 1;
+        }
+
         cout << "Time: " << timeStep << " seconds" << endl;
 
-        for (int sensorIndex = 0; sensorIndex < sensors.size(); sensorIndex++) {
+        for (size_t sensorIndex = 0; sensorIndex < sensors.size(); sensorIndex++) {
             SensorReading reading = sensors[sensorIndex].createReading(sensorValues[sensorIndex], timeStep);
             readings.push_back(reading);
             printReading(reading);
