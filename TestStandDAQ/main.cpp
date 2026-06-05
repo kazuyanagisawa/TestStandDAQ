@@ -85,24 +85,28 @@ public:
 
     double warningThreshold;
     double criticalThreshold;
+    double baseValue;
+    double rateOfChange;
 
-    Sensor(string sensorName, string sensorUnit, double warningLimit, double criticalLimit)
+    Sensor(
+        string sensorName,
+        string sensorUnit,
+        double warningLimit,
+        double criticalLimit,
+        double startingValue,
+        double changeRate)
     {
         name = sensorName;
         unit = sensorUnit;
         warningThreshold = warningLimit;
         criticalThreshold = criticalLimit;
+        baseValue = startingValue;
+        rateOfChange = changeRate;
     }
 
-    string determineStatus(double value) const
+    double simulateValue(int timeSeconds) const
     {
-        if (value >= criticalThreshold) {
-            return "CRITICAL";
-        } else if (value >= warningThreshold) {
-            return "WARNING";
-        }
-
-        return "OK";
+        return baseValue + (timeSeconds * rateOfChange);
     }
 
     SensorReading createReading(double value, int timeSeconds) const
@@ -116,6 +120,17 @@ public:
 
         return reading;
     }
+
+    string determineStatus(double value) const
+    {
+        if (value >= criticalThreshold) {
+            return "CRITICAL";
+        } else if (value >= warningThreshold) {
+            return "WARNING";
+        }
+
+        return "OK";
+    }
 };
 
 int main() {
@@ -125,9 +140,9 @@ int main() {
 
     vector<SensorReading> readings;
     
-    Sensor temperatureSensor("Temperature", "C", 700.0, 800.0);
-    Sensor pressureSensor("Pressure", "psi", 235.0, 250.0);
-    Sensor vibrationSensor("Vibration", "g", 1.8, 2.2);
+    Sensor temperatureSensor("Temperature", "C", 700.0, 800.0, 650.0, 25.0);
+    Sensor pressureSensor("Pressure", "psi", 235.0, 250.0, 210.0, 8.0);
+    Sensor vibrationSensor("Vibration", "g", 1.8, 2.2, 1.2, 0.3);
     
     vector<Sensor> sensors;
 
@@ -141,20 +156,11 @@ int main() {
          << endl;
 
     for (int timeStep = 0; timeStep < 5; timeStep++) {
-        vector<double> sensorValues;
-        sensorValues.push_back(650.0 + (timeStep * 25.0));
-        sensorValues.push_back(210.0 + (timeStep * 8.0));
-        sensorValues.push_back(1.2 + (timeStep * 0.3));
-
-        if (sensorValues.size() != sensors.size()) {
-            cout << "Error: Sensor value count does not match configured sensor count." << endl;
-            return 1;
-        }
-
         cout << "Time: " << timeStep << " seconds" << endl;
 
         for (size_t sensorIndex = 0; sensorIndex < sensors.size(); sensorIndex++) {
-            SensorReading reading = sensors[sensorIndex].createReading(sensorValues[sensorIndex], timeStep);
+            double sensorValue = sensors[sensorIndex].simulateValue(timeStep);
+            SensorReading reading = sensors[sensorIndex].createReading(sensorValue, timeStep);
             readings.push_back(reading);
             printReading(reading);
         }
