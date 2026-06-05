@@ -10,7 +10,9 @@ Sensor::Sensor(
     double noiseLimit,
     int failureTime,
     int spikeTime,
-    double spikeSize)
+    double spikeSize,
+    int dropoutStartTime,
+    int dropoutDuration)
     : name(sensorName),
       unit(sensorUnit),
       warningThreshold(warningLimit),
@@ -20,7 +22,9 @@ Sensor::Sensor(
       noiseAmplitude(noiseLimit),
       failureTimeSeconds(failureTime),
       spikeTimeSeconds(spikeTime),
-      spikeMagnitude(spikeSize)
+      spikeMagnitude(spikeSize),
+      dropoutStartTimeSeconds(dropoutStartTime),
+      dropoutDurationSeconds(dropoutDuration)
 {
 }
 
@@ -53,6 +57,10 @@ SensorReading Sensor::createReading(int timeSeconds) const
         reading.value = 0.0;
         reading.status = Status::SENSOR_FAILURE;
         reading.isValid = false;
+    } else if (hasDropout(timeSeconds)) {
+        reading.value = 0.0;
+        reading.status = Status::SENSOR_FAILURE;
+        reading.isValid = false;
     } else {
         double value = simulateValue(timeSeconds);
         reading.value = value;
@@ -71,6 +79,13 @@ bool Sensor::hasFailed(int timeSeconds) const
 bool Sensor::hasSpike(int timeSeconds) const
 {
     return spikeTimeSeconds != NO_SPIKE && timeSeconds == spikeTimeSeconds;
+}
+
+bool Sensor::hasDropout(int timeSeconds) const
+{
+    return dropoutStartTimeSeconds != NO_DROPOUT
+        && timeSeconds >= dropoutStartTimeSeconds
+        && timeSeconds < dropoutStartTimeSeconds + dropoutDurationSeconds;
 }
 
 Status Sensor::determineStatus(double value) const

@@ -19,7 +19,7 @@ int main() {
     TestStand testStand(TEST_DURATION_SECONDS);
 
     testStand.addSensor(Sensor("Temperature", "C", 700.0, 800.0, 650.0, 25.0, 2.0, 4));
-    testStand.addSensor(Sensor("Pressure", "psi", 235.0, 250.0, 210.0, 8.0, 1.0));
+    testStand.addSensor(Sensor("Pressure", "psi", 235.0, 250.0, 210.0, 8.0, 1.0, Sensor::NO_FAILURE, Sensor::NO_SPIKE, 0.0, 2, 2));
     testStand.addSensor(Sensor("Vibration", "g", 1.8, 2.2, 1.2, 0.3, 0.05, Sensor::NO_FAILURE, 3, 1.0));
 
     if (!testStand.run()) {
