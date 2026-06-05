@@ -21,6 +21,7 @@ void configureSensors(TestStand& testStand)
     temperatureConfig.baseValue = 650.0;
     temperatureConfig.rateOfChange = 25.0;
     temperatureConfig.noiseAmplitude = 2.0;
+    temperatureConfig.anomalyThreshold = 40.0;
     temperatureConfig.failureTimeSeconds = 4;
 
     SensorConfig pressureConfig;
@@ -31,6 +32,7 @@ void configureSensors(TestStand& testStand)
     pressureConfig.baseValue = 210.0;
     pressureConfig.rateOfChange = 8.0;
     pressureConfig.noiseAmplitude = 1.0;
+    pressureConfig.anomalyThreshold = 15.0;
     pressureConfig.dropoutStartTimeSeconds = 2;
     pressureConfig.dropoutDurationSeconds = 2;
 
@@ -42,6 +44,7 @@ void configureSensors(TestStand& testStand)
     vibrationConfig.baseValue = 1.2;
     vibrationConfig.rateOfChange = 0.3;
     vibrationConfig.noiseAmplitude = 0.05;
+    vibrationConfig.anomalyThreshold = 0.8;
     vibrationConfig.spikeTimeSeconds = 3;
     vibrationConfig.spikeMagnitude = 1.0;
 
