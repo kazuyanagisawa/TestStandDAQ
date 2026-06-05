@@ -22,17 +22,6 @@ void printReading(const SensorReading& reading)
          << " | Status: " << reading.status << endl;
 }
 
-string determineStatus(double value, double warningThreshold, double criticalThreshold)
-{
-    if (value >= criticalThreshold) {
-        return "CRITICAL";
-    } else if (value >= warningThreshold) {
-        return "WARNING";
-    }
-
-    return "OK";
-}
-
 void printTestSummary(const vector<SensorReading>& readings)
 {
     int okCount = 0;
