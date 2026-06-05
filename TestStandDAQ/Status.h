@@ -8,6 +8,7 @@ enum class Status
     OK,
     WARNING,
     CRITICAL,
+    ANOMALY,
     SENSOR_FAILURE
 };
 
