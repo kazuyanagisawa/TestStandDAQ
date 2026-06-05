@@ -9,6 +9,8 @@ std::string statusToString(Status status)
             return "WARNING";
         case Status::CRITICAL:
             return "CRITICAL";
+        case Status::ANOMALY:
+            return "ANOMALY";
         case Status::SENSOR_FAILURE:
             return "SENSOR_FAILURE";
     }
