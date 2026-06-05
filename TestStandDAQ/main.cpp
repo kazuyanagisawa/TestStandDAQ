@@ -249,6 +249,11 @@ public:
     {
     }
 
+    string getName() const
+    {
+        return name;
+    }
+
     double simulateValue(int timeSeconds) const
     {
         return baseValue + (timeSeconds * rateOfChange);
@@ -368,8 +373,7 @@ public:
         cout << "SENSOR STATISTICS" << endl;
 
         for (const Sensor& sensor : sensors) {
-            SensorReading sampleReading = sensor.createReading(0);
-            SensorStatistics statistics = generateSensorStatistics(readings, sampleReading.sensorName);
+            SensorStatistics statistics = generateSensorStatistics(readings, sensor.getName());
             printSensorStatistics(statistics);
             cout << endl;
         }
