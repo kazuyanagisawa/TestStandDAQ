@@ -7,6 +7,7 @@ Sensor::Sensor(
     double criticalLimit,
     double startingValue,
     double changeRate,
+    double noiseLimit,
     int failureTime)
     : name(sensorName),
       unit(sensorUnit),
@@ -14,6 +15,7 @@ Sensor::Sensor(
       criticalThreshold(criticalLimit),
       baseValue(startingValue),
       rateOfChange(changeRate),
+      noiseAmplitude(noiseLimit),
       failureTimeSeconds(failureTime)
 {
 }
@@ -25,7 +27,10 @@ std::string Sensor::getName() const
 
 double Sensor::simulateValue(int timeSeconds) const
 {
-    return baseValue + (timeSeconds * rateOfChange);
+    double deterministicValue = baseValue + (timeSeconds * rateOfChange);
+    double simpleNoise = noiseAmplitude * ((timeSeconds % 3) - 1);
+
+    return deterministicValue + simpleNoise;
 }
 
 SensorReading Sensor::createReading(int timeSeconds) const

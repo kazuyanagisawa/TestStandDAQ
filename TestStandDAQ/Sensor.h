@@ -2,8 +2,8 @@
 #define SENSOR_H
 
 #include <string>
+
 #include "SensorReading.h"
-#include "Sensor.h"
 
 class Sensor
 {
@@ -15,7 +15,9 @@ private:
     double criticalThreshold;
     double baseValue;
     double rateOfChange;
+    double noiseAmplitude;
     int failureTimeSeconds;
+
     static const int NO_FAILURE = -1;
 
 public:
@@ -26,6 +28,7 @@ public:
         double criticalLimit,
         double startingValue,
         double changeRate,
+        double noiseLimit,
         int failureTime = NO_FAILURE);
 
     std::string getName() const;
