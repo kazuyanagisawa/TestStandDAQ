@@ -12,7 +12,8 @@ Sensor::Sensor(const SensorConfig& config)
       spikeTimeSeconds(config.spikeTimeSeconds),
       spikeMagnitude(config.spikeMagnitude),
       dropoutStartTimeSeconds(config.dropoutStartTimeSeconds),
-      dropoutDurationSeconds(config.dropoutDurationSeconds)
+      dropoutDurationSeconds(config.dropoutDurationSeconds),
+      anomalyThreshold(config.anomalyThreshold)
 {
 }
 
@@ -53,8 +54,13 @@ SensorReading Sensor::createReading(int timeSeconds) const
     } else {
         double value = simulateValue(timeSeconds);
         reading.value = value;
-        reading.status = determineStatus(value);
         reading.isValid = true;
+
+        if (isAnomalous(timeSeconds, value)) {
+            reading.status = Status::ANOMALY;
+        } else {
+            reading.status = determineStatus(value);
+        }
     }
 
     return reading;
@@ -75,6 +81,22 @@ bool Sensor::hasDropout(int timeSeconds) const
     return dropoutStartTimeSeconds != NO_DROPOUT
         && timeSeconds >= dropoutStartTimeSeconds
         && timeSeconds < dropoutStartTimeSeconds + dropoutDurationSeconds;
+}
+
+bool Sensor::isAnomalous(int timeSeconds, double value) const
+{
+    if (anomalyThreshold <= 0.0 || timeSeconds == 0) {
+        return false;
+    }
+
+    double previousExpectedValue = simulateValue(timeSeconds - 1);
+    double changeMagnitude = value - previousExpectedValue;
+
+    if (changeMagnitude < 0.0) {
+        changeMagnitude = -changeMagnitude;
+    }
+
+    return changeMagnitude > anomalyThreshold;
 }
 
 Status Sensor::determineStatus(double value) const

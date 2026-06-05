@@ -23,6 +23,8 @@ struct SensorConfig
 
     int dropoutStartTimeSeconds = -1;
     int dropoutDurationSeconds = 0;
+    
+    double anomalyThreshold = 0.0;
 };
 
 class Sensor
@@ -41,6 +43,7 @@ private:
     double spikeMagnitude;
     int dropoutStartTimeSeconds;
     int dropoutDurationSeconds;
+    double anomalyThreshold;
 
 
 public:
@@ -57,6 +60,7 @@ public:
     bool hasSpike(int timeSeconds) const;
     bool hasDropout(int timeSeconds) const;
     Status determineStatus(double value) const;
+    bool isAnomalous(int timeSeconds, double value) const;
 };
 
 #endif
