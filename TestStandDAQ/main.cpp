@@ -217,6 +217,38 @@ void writeReadingsToCsv(const vector<SensorReading>& readings, const string& fil
     cout << "Data log written to: " << fileName << endl;
 }
 
+void writeSensorStatisticsToCsv(const vector<SensorStatistics>& statisticsList, const string& fileName)
+{
+    ofstream outputFile(fileName);
+
+    if (!outputFile) {
+        cout << "Error: Could not open file for writing: " << fileName << endl;
+        return;
+    }
+
+    outputFile << "sensor_name,valid_count,invalid_count,minimum_value,maximum_value,average_value" << endl;
+
+    for (const SensorStatistics& statistics : statisticsList) {
+        outputFile << statistics.sensorName << ","
+                   << statistics.validCount << ","
+                   << statistics.invalidCount << ",";
+
+        if (statistics.validCount > 0) {
+            outputFile << statistics.minimumValue << ","
+                       << statistics.maximumValue << ","
+                       << statistics.averageValue;
+        } else {
+            outputFile << "N/A,N/A,N/A";
+        }
+
+        outputFile << endl;
+    }
+
+    outputFile.close();
+
+    cout << "Statistics report written to: " << fileName << endl;
+}
+
 class Sensor
 {
 private:
@@ -379,6 +411,18 @@ public:
         }
     }
 
+    void writeSensorStatisticsCsv(const string& fileName) const
+    {
+        vector<SensorStatistics> statisticsList;
+
+        for (const Sensor& sensor : sensors) {
+            SensorStatistics statistics = generateSensorStatistics(readings, sensor.getName());
+            statisticsList.push_back(statistics);
+        }
+
+        writeSensorStatisticsToCsv(statisticsList, fileName);
+    }
+
     void writeCsvLog(const string& fileName) const
     {
         writeReadingsToCsv(readings, fileName);
@@ -406,6 +450,7 @@ int main() {
     cout << endl;
     testStand.printSensorStatisticsReport();
     testStand.writeCsvLog("test_log.csv");
+    testStand.writeSensorStatisticsCsv("sensor_statistics.csv");
 
     return 0;
 }
