@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -48,6 +49,16 @@ struct TestSummary
     int sensorFailureCount;
     int validReadingCount;
     int invalidReadingCount;
+};
+
+struct SensorStatistics
+{
+    string sensorName;
+    int validCount;
+    int invalidCount;
+    double minimumValue;
+    double maximumValue;
+    double averageValue;
 };
 
 TestSummary generateTestSummary(const vector<SensorReading>& readings)
@@ -99,6 +110,65 @@ void printTestSummary(const TestSummary& summary)
         cout << "Overall result: PASS WITH WARNINGS" << endl;
     } else {
         cout << "Overall result: PASS" << endl;
+    }
+}
+
+SensorStatistics generateSensorStatistics(const vector<SensorReading>& readings, const string& sensorName)
+{
+    SensorStatistics statistics;
+    statistics.sensorName = sensorName;
+    statistics.validCount = 0;
+    statistics.invalidCount = 0;
+    statistics.minimumValue = numeric_limits<double>::max();
+    statistics.maximumValue = numeric_limits<double>::lowest();
+    statistics.averageValue = 0.0;
+
+    double totalValue = 0.0;
+
+    for (const SensorReading& reading : readings) {
+        if (reading.sensorName != sensorName) {
+            continue;
+        }
+
+        if (!reading.isValid) {
+            statistics.invalidCount++;
+            continue;
+        }
+
+        statistics.validCount++;
+        totalValue += reading.value;
+
+        if (reading.value < statistics.minimumValue) {
+            statistics.minimumValue = reading.value;
+        }
+
+        if (reading.value > statistics.maximumValue) {
+            statistics.maximumValue = reading.value;
+        }
+    }
+
+    if (statistics.validCount > 0) {
+        statistics.averageValue = totalValue / statistics.validCount;
+    } else {
+        statistics.minimumValue = 0.0;
+        statistics.maximumValue = 0.0;
+    }
+
+    return statistics;
+}
+
+void printSensorStatistics(const SensorStatistics& statistics)
+{
+    cout << statistics.sensorName << " statistics" << endl;
+    cout << "Valid readings: " << statistics.validCount << endl;
+    cout << "Invalid readings: " << statistics.invalidCount << endl;
+
+    if (statistics.validCount > 0) {
+        cout << "Minimum value: " << statistics.minimumValue << endl;
+        cout << "Maximum value: " << statistics.maximumValue << endl;
+        cout << "Average value: " << statistics.averageValue << endl;
+    } else {
+        cout << "No valid readings available for statistics." << endl;
     }
 }
 
@@ -293,6 +363,18 @@ public:
         printTestSummary(summary);
     }
 
+    void printSensorStatisticsReport() const
+    {
+        cout << "SENSOR STATISTICS" << endl;
+
+        for (const Sensor& sensor : sensors) {
+            SensorReading sampleReading = sensor.createReading(0);
+            SensorStatistics statistics = generateSensorStatistics(readings, sampleReading.sensorName);
+            printSensorStatistics(statistics);
+            cout << endl;
+        }
+    }
+
     void writeCsvLog(const string& fileName) const
     {
         writeReadingsToCsv(readings, fileName);
@@ -318,6 +400,7 @@ int main() {
     cout << endl;
     testStand.printSummary();
     cout << endl;
+    testStand.printSensorStatisticsReport();
     testStand.writeCsvLog("test_log.csv");
 
     return 0;
