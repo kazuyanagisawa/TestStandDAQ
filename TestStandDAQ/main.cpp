@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "Status.h"
+#include "SensorReading.h"
 
 using namespace std;
 
@@ -12,38 +13,6 @@ const string DATA_LOG_FILE_NAME = "test_log.csv";
 const string SENSOR_STATISTICS_FILE_NAME = "sensor_statistics.csv";
 const string TEST_SUMMARY_FILE_NAME = "test_summary.csv";
 
-
-// Data models
-struct SensorReading
-{
-    int timeSeconds;
-    string sensorName;
-    double value;
-    string unit;
-    Status status;
-    bool isValid;
-};
-
-struct TestSummary
-{
-    int totalReadings;
-    int okCount;
-    int warningCount;
-    int criticalCount;
-    int sensorFailureCount;
-    int validReadingCount;
-    int invalidReadingCount;
-};
-
-struct SensorStatistics
-{
-    string sensorName;
-    int validCount;
-    int invalidCount;
-    double minimumValue;
-    double maximumValue;
-    double averageValue;
-};
 
 // Summary and statistics logic
 string determineOverallResult(const TestSummary& summary)
