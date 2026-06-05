@@ -35,43 +35,58 @@ struct SensorReading
     Status status;
 };
 
+struct TestSummary
+{
+    int totalReadings;
+    int okCount;
+    int warningCount;
+    int criticalCount;
+};
+
+TestSummary generateTestSummary(const vector<SensorReading>& readings)
+{
+    TestSummary summary;
+    summary.totalReadings = static_cast<int>(readings.size());
+    summary.okCount = 0;
+    summary.warningCount = 0;
+    summary.criticalCount = 0;
+
+    for (const SensorReading& reading : readings) {
+        if (reading.status == Status::CRITICAL) {
+            summary.criticalCount++;
+        } else if (reading.status == Status::WARNING) {
+            summary.warningCount++;
+        } else {
+            summary.okCount++;
+        }
+    }
+
+    return summary;
+}
+
+void printTestSummary(const TestSummary& summary)
+{
+    cout << "TEST SUMMARY" << endl;
+    cout << "Total readings collected: " << summary.totalReadings << endl;
+    cout << "OK readings: " << summary.okCount << endl;
+    cout << "Warning readings: " << summary.warningCount << endl;
+    cout << "Critical readings: " << summary.criticalCount << endl;
+
+    if (summary.criticalCount > 0) {
+        cout << "Overall result: FAIL" << endl;
+    } else if (summary.warningCount > 0) {
+        cout << "Overall result: PASS WITH WARNINGS" << endl;
+    } else {
+        cout << "Overall result: PASS" << endl;
+    }
+}
+
 void printReading(const SensorReading& reading)
 {
     cout << reading.sensorName << ": "
          << reading.value << " "
          << reading.unit
          << " | Status: " << statusToString(reading.status) << endl;
-}
-
-void printTestSummary(const vector<SensorReading>& readings)
-{
-    int okCount = 0;
-    int warningCount = 0;
-    int criticalCount = 0;
-
-    for (const SensorReading& reading : readings) {
-        if (reading.status == Status::CRITICAL) {
-            criticalCount++;
-        } else if (reading.status == Status::WARNING) {
-            warningCount++;
-        } else {
-            okCount++;
-        }
-    }
-
-    cout << "TEST SUMMARY" << endl;
-    cout << "Total readings collected: " << readings.size() << endl;
-    cout << "OK readings: " << okCount << endl;
-    cout << "Warning readings: " << warningCount << endl;
-    cout << "Critical readings: " << criticalCount << endl;
-
-    if (criticalCount > 0) {
-        cout << "Overall result: FAIL" << endl;
-    } else if (warningCount > 0) {
-        cout << "Overall result: PASS WITH WARNINGS" << endl;
-    } else {
-        cout << "Overall result: PASS" << endl;
-    }
 }
 
 void writeReadingsToCsv(const vector<SensorReading>& readings, const string& fileName)
@@ -221,7 +236,8 @@ public:
 
     void printSummary() const
     {
-        printTestSummary(readings);
+        TestSummary summary = generateTestSummary(readings);
+        printTestSummary(summary);
     }
 
     void writeCsvLog(const string& fileName) const
