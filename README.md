@@ -70,3 +70,20 @@ Key lessons learned throughout the project:
 - Translating engineering requirements into software behavior
 
 Examples of engineering decisions include introducing a SensorConfig structure to improve maintainability, adding health assessment logic to convert raw telemetry into actionable information, and implementing anomaly detection to identify unexpected sensor behavior.
+
+## Example Output
+
+### Test Summary
+
+```text
+Overall Result: FAIL
+
+Total readings: 15
+OK readings: 7
+Warning readings: 2
+Critical readings: 1
+Anomaly readings: 1
+Sensor failures: 2
+
+Valid readings: 13
+Invalid readings: 2
