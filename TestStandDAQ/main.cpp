@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -63,6 +64,30 @@ void printTestSummary(const vector<SensorReading>& readings)
     }
 }
 
+void writeReadingsToCsv(const vector<SensorReading>& readings, const string& fileName)
+{
+    ofstream outputFile(fileName);
+
+    if (!outputFile) {
+        cout << "Error: Could not open file for writing: " << fileName << endl;
+        return;
+    }
+
+    outputFile << "time_seconds,sensor_name,value,unit,status" << endl;
+
+    for (const SensorReading& reading : readings) {
+        outputFile << reading.timeSeconds << ","
+                   << reading.sensorName << ","
+                   << reading.value << ","
+                   << reading.unit << ","
+                   << reading.status << endl;
+    }
+
+    outputFile.close();
+
+    cout << "Data log written to: " << fileName << endl;
+}
+
 int main() {
     cout << "Starting Test Stand Data Acquisition Simulation..." << endl;
     cout << "System initialized successfully." << endl;
@@ -114,6 +139,8 @@ int main() {
     cout << "Test complete." << endl;
     cout << endl;
     printTestSummary(readings);
+    cout << endl;
+    writeReadingsToCsv(readings, "test_log.csv");
 
     return 0;
 }
