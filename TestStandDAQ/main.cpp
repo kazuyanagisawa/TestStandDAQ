@@ -9,7 +9,8 @@ enum class Status
 {
     OK,
     WARNING,
-    CRITICAL
+    CRITICAL,
+    SENSOR_FAILURE
 };
 
 string statusToString(Status status)
@@ -21,6 +22,8 @@ string statusToString(Status status)
             return "WARNING";
         case Status::CRITICAL:
             return "CRITICAL";
+        case Status::SENSOR_FAILURE:
+            return "SENSOR_FAILURE";
     }
 
     return "UNKNOWN";
@@ -41,6 +44,7 @@ struct TestSummary
     int okCount;
     int warningCount;
     int criticalCount;
+    int sensorFailureCount;
 };
 
 TestSummary generateTestSummary(const vector<SensorReading>& readings)
@@ -50,9 +54,12 @@ TestSummary generateTestSummary(const vector<SensorReading>& readings)
     summary.okCount = 0;
     summary.warningCount = 0;
     summary.criticalCount = 0;
+    summary.sensorFailureCount = 0;
 
     for (const SensorReading& reading : readings) {
-        if (reading.status == Status::CRITICAL) {
+        if (reading.status == Status::SENSOR_FAILURE) {
+            summary.sensorFailureCount++;
+        } else if (reading.status == Status::CRITICAL) {
             summary.criticalCount++;
         } else if (reading.status == Status::WARNING) {
             summary.warningCount++;
@@ -71,8 +78,9 @@ void printTestSummary(const TestSummary& summary)
     cout << "OK readings: " << summary.okCount << endl;
     cout << "Warning readings: " << summary.warningCount << endl;
     cout << "Critical readings: " << summary.criticalCount << endl;
+    cout << "Sensor failures: " << summary.sensorFailureCount << endl;
 
-    if (summary.criticalCount > 0) {
+    if (summary.sensorFailureCount > 0 || summary.criticalCount > 0) {
         cout << "Overall result: FAIL" << endl;
     } else if (summary.warningCount > 0) {
         cout << "Overall result: PASS WITH WARNINGS" << endl;
@@ -123,6 +131,7 @@ private:
     double criticalThreshold;
     double baseValue;
     double rateOfChange;
+    int failureTimeSeconds;
 
 public:
     Sensor(
@@ -131,13 +140,15 @@ public:
         double warningLimit,
         double criticalLimit,
         double startingValue,
-        double changeRate)
+        double changeRate,
+        int failureTime)
         : name(sensorName),
           unit(sensorUnit),
           warningThreshold(warningLimit),
           criticalThreshold(criticalLimit),
           baseValue(startingValue),
-          rateOfChange(changeRate)
+          rateOfChange(changeRate),
+          failureTimeSeconds(failureTime)
     {
     }
 
@@ -153,9 +164,18 @@ public:
         reading.sensorName = name;
         reading.value = value;
         reading.unit = unit;
-        reading.status = determineStatus(value);
+        if (hasFailed(timeSeconds)) {
+            reading.status = Status::SENSOR_FAILURE;
+        } else {
+            reading.status = determineStatus(value);
+        }
 
         return reading;
+    }
+
+    bool hasFailed(int timeSeconds) const
+    {
+        return failureTimeSeconds >= 0 && timeSeconds >= failureTimeSeconds;
     }
 
     Status determineStatus(double value) const
@@ -255,9 +275,9 @@ int main() {
 
     TestStand testStand(5);
 
-    testStand.addSensor(Sensor("Temperature", "C", 700.0, 800.0, 650.0, 25.0));
-    testStand.addSensor(Sensor("Pressure", "psi", 235.0, 250.0, 210.0, 8.0));
-    testStand.addSensor(Sensor("Vibration", "g", 1.8, 2.2, 1.2, 0.3));
+    testStand.addSensor(Sensor("Temperature", "C", 700.0, 800.0, 650.0, 25.0, 4));
+    testStand.addSensor(Sensor("Pressure", "psi", 235.0, 250.0, 210.0, 8.0, -1));
+    testStand.addSensor(Sensor("Vibration", "g", 1.8, 2.2, 1.2, 0.3, -1));
 
     if (!testStand.run()) {
         return 1;
