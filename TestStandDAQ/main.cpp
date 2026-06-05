@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// Status definitions
 enum class Status
 {
     OK,
@@ -30,6 +31,7 @@ string statusToString(Status status)
     return "UNKNOWN";
 }
 
+// Data models
 struct SensorReading
 {
     int timeSeconds;
@@ -61,6 +63,7 @@ struct SensorStatistics
     double averageValue;
 };
 
+// Summary and statistics logic
 string determineOverallResult(const TestSummary& summary)
 {
     if (summary.sensorFailureCount > 0 || summary.criticalCount > 0) {
@@ -104,6 +107,7 @@ TestSummary generateTestSummary(const vector<SensorReading>& readings)
     return summary;
 }
 
+// Console output helpers
 void printTestSummary(const TestSummary& summary)
 {
     cout << "TEST SUMMARY" << endl;
@@ -190,6 +194,7 @@ void printReading(const SensorReading& reading)
     cout << " | Status: " << statusToString(reading.status) << endl;
 }
 
+// CSV output helpers
 void writeReadingsToCsv(const vector<SensorReading>& readings, const string& fileName)
 {
     ofstream outputFile(fileName);
@@ -281,6 +286,7 @@ void writeTestSummaryToCsv(const TestSummary& summary, const string& fileName)
     cout << "Test summary written to: " << fileName << endl;
 }
 
+// Domain classes
 class Sensor
 {
 private:
@@ -499,6 +505,7 @@ public:
         writeReadingsToCsv(readings, fileName);
     }
 };
+
 
 int main() {
     cout << "Starting Test Stand Data Acquisition Simulation..." << endl;
