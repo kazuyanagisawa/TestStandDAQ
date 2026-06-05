@@ -88,12 +88,28 @@ void writeReadingsToCsv(const vector<SensorReading>& readings, const string& fil
     cout << "Data log written to: " << fileName << endl;
 }
 
+class Sensor
+{
+public:
+    string name;
+    string unit;
+
+    double warningThreshold;
+    double criticalThreshold;
+};
+
 int main() {
     cout << "Starting Test Stand Data Acquisition Simulation..." << endl;
     cout << "System initialized successfully." << endl;
     cout << endl;
 
     vector<SensorReading> readings;
+    
+    Sensor temperatureSensor;
+    temperatureSensor.name = "Temperature";
+    temperatureSensor.unit = "C";
+    temperatureSensor.warningThreshold = 700.0;
+    temperatureSensor.criticalThreshold = 800.0;
 
     for (int timeStep = 0; timeStep < 5; timeStep++) {
         double temperatureCelsius = 650.0 + (timeStep * 25.0);
