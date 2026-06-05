@@ -16,33 +16,6 @@ Sensor::Sensor(const SensorConfig& config)
 {
 }
 
-Sensor::Sensor(
-    std::string sensorName,
-    std::string sensorUnit,
-    double warningLimit,
-    double criticalLimit,
-    double startingValue,
-    double changeRate,
-    double noiseLimit,
-    int failureTime,
-    int spikeTime,
-    double spikeSize,
-    int dropoutStartTime,
-    int dropoutDuration)
-    : name(sensorName),
-      unit(sensorUnit),
-      warningThreshold(warningLimit),
-      criticalThreshold(criticalLimit),
-      baseValue(startingValue),
-      rateOfChange(changeRate),
-      noiseAmplitude(noiseLimit),
-      failureTimeSeconds(failureTime),
-      spikeTimeSeconds(spikeTime),
-      spikeMagnitude(spikeSize),
-      dropoutStartTimeSeconds(dropoutStartTime),
-      dropoutDurationSeconds(dropoutDuration)
-{
-}
 
 std::string Sensor::getName() const
 {
