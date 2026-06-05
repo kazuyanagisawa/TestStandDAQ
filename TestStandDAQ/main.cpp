@@ -134,6 +134,22 @@ public:
     }
 };
 
+void runAcquisitionLoop(const vector<Sensor>& sensors, vector<SensorReading>& readings, int durationSeconds)
+{
+    for (int timeStep = 0; timeStep < durationSeconds; timeStep++) {
+        cout << "Time: " << timeStep << " seconds" << endl;
+
+        for (size_t sensorIndex = 0; sensorIndex < sensors.size(); sensorIndex++) {
+            double sensorValue = sensors[sensorIndex].simulateValue(timeStep);
+            SensorReading reading = sensors[sensorIndex].createReading(sensorValue, timeStep);
+            readings.push_back(reading);
+            printReading(reading);
+        }
+
+        cout << endl;
+    }
+}
+
 int main() {
     cout << "Starting Test Stand Data Acquisition Simulation..." << endl;
     cout << "System initialized successfully." << endl;
@@ -156,18 +172,7 @@ int main() {
          << endl
          << endl;
 
-    for (int timeStep = 0; timeStep < 5; timeStep++) {
-        cout << "Time: " << timeStep << " seconds" << endl;
-
-        for (size_t sensorIndex = 0; sensorIndex < sensors.size(); sensorIndex++) {
-            double sensorValue = sensors[sensorIndex].simulateValue(timeStep);
-            SensorReading reading = sensors[sensorIndex].createReading(sensorValue, timeStep);
-            readings.push_back(reading);
-            printReading(reading);
-        }
-
-        cout << endl;
-    }
+    runAcquisitionLoop(sensors, readings, 5);
 
     cout << "Test complete." << endl;
     cout << endl;
