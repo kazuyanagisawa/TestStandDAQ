@@ -20,6 +20,7 @@ struct TestSummary
     int okCount;
     int warningCount;
     int criticalCount;
+    int anomalyCount;
     int sensorFailureCount;
     int validReadingCount;
     int invalidReadingCount;

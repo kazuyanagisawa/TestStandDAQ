@@ -9,7 +9,7 @@ using namespace std;
 // Summary and statistics logic
 string determineOverallResult(const TestSummary& summary)
 {
-    if (summary.sensorFailureCount > 0 || summary.criticalCount > 0) {
+    if (summary.sensorFailureCount > 0 || summary.criticalCount > 0 || summary.anomalyCount > 0) {
         return "FAIL";
     } else if (summary.warningCount > 0) {
         return "PASS_WITH_WARNINGS";
@@ -25,6 +25,7 @@ TestSummary generateTestSummary(const vector<SensorReading>& readings)
     summary.okCount = 0;
     summary.warningCount = 0;
     summary.criticalCount = 0;
+    summary.anomalyCount = 0;
     summary.sensorFailureCount = 0;
     summary.validReadingCount = 0;
     summary.invalidReadingCount = 0;
@@ -38,6 +39,8 @@ TestSummary generateTestSummary(const vector<SensorReading>& readings)
 
         if (reading.status == Status::SENSOR_FAILURE) {
             summary.sensorFailureCount++;
+        } else if (reading.status == Status::ANOMALY) {
+            summary.anomalyCount++;
         } else if (reading.status == Status::CRITICAL) {
             summary.criticalCount++;
         } else if (reading.status == Status::WARNING) {
@@ -58,6 +61,7 @@ void printTestSummary(const TestSummary& summary)
     cout << "OK readings: " << summary.okCount << endl;
     cout << "Warning readings: " << summary.warningCount << endl;
     cout << "Critical readings: " << summary.criticalCount << endl;
+    cout << "Anomaly readings: " << summary.anomalyCount << endl;
     cout << "Sensor failures: " << summary.sensorFailureCount << endl;
     cout << "Valid readings: " << summary.validReadingCount << endl;
     cout << "Invalid readings: " << summary.invalidReadingCount << endl;
@@ -136,4 +140,3 @@ void printReading(const SensorReading& reading)
 
     cout << " | Status: " << statusToString(reading.status) << endl;
 }
-
