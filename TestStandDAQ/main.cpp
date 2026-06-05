@@ -141,22 +141,19 @@ int main() {
          << endl;
 
     for (int timeStep = 0; timeStep < 5; timeStep++) {
-        double temperatureCelsius = 650.0 + (timeStep * 25.0);
-        double pressurePsi = 210.0 + (timeStep * 8.0);
-        double vibrationG = 1.2 + (timeStep * 0.3);
-
-        SensorReading temperatureReading = temperatureSensor.createReading(temperatureCelsius, timeStep);
-        SensorReading pressureReading = pressureSensor.createReading(pressurePsi, timeStep);
-        SensorReading vibrationReading = vibrationSensor.createReading(vibrationG, timeStep);
-
-        readings.push_back(temperatureReading);
-        readings.push_back(pressureReading);
-        readings.push_back(vibrationReading);
+        vector<double> sensorValues;
+        sensorValues.push_back(650.0 + (timeStep * 25.0));
+        sensorValues.push_back(210.0 + (timeStep * 8.0));
+        sensorValues.push_back(1.2 + (timeStep * 0.3));
 
         cout << "Time: " << timeStep << " seconds" << endl;
-        printReading(temperatureReading);
-        printReading(pressureReading);
-        printReading(vibrationReading);
+
+        for (int sensorIndex = 0; sensorIndex < sensors.size(); sensorIndex++) {
+            SensorReading reading = sensors[sensorIndex].createReading(sensorValues[sensorIndex], timeStep);
+            readings.push_back(reading);
+            printReading(reading);
+        }
+
         cout << endl;
     }
 
